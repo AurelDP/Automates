@@ -8,4 +8,12 @@ public class Transition {
 		this.arrivalState = arrivalState;
 	}
 	
+	public String getLetter() {
+		return letter;
+	}
+	
+	public State getArrivalState() {
+		return arrivalState;
+	}
+	
 }
