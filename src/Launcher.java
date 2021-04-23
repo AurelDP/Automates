@@ -31,14 +31,21 @@ public class Launcher {
 	
 			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1));
 	
-			readFile(namesTxtFiles.get(entry - 1));
+			Automaton automaton = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			
 		} else {
 			System.out.println("Le dossier des automates est vide !");
 		}
 	}
 
-	private static void readFile(final String nom) {
+	private static Automaton getAutomatonFromFile(final String nom) {
+		int nbrLettersInLang;
+		int nbrStates;
+		int nbrInitialStates;
+		int nbrFinalStates;
+		int nbrTransitions;
+		ArrayList<State> states = new ArrayList<State>();
+		
 		try {
 			FileInputStream file = new FileInputStream("./automates/" + nom);
 			Scanner scanner = new Scanner(file);
@@ -56,6 +63,7 @@ public class Launcher {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return new Automaton(nbrLettersInLang, nbrStates, nbrInitialStates, nbrFinalStates, nbrTransitions, states);
 	}
 
 	private static ArrayList<String> findNamesInFile(File file) {
