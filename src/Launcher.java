@@ -6,22 +6,36 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		int entry;
-
+		
+		
+		/*
+		 * METTRE ICI POUR TESTER, NE PAS S'OCCUPER DE TOUT CE QU'IL Y A EN DESSOUS
+		 * (Je devrais le finir dans la soirée du 23 (Aurel))
+		 */
+		
+		
 		ArrayList<String> namesTxtFiles = findNamesInFile(new File("./automates"));
-		System.out.println("Choisissez l'automate à traiter parmi la liste suivante :");
-
-		for (int u = 1; u <= namesTxtFiles.size(); u++)
-			System.out.println(u + " - " + namesTxtFiles.get(u - 1));
-
-		do {
-			System.out.println("\nVotre choix (entrez le numéro de l'automate) : ");
-			Scanner sc = new Scanner(System.in);
-			entry = sc.nextInt();
-		} while (entry <= 0 || entry > namesTxtFiles.size());
-
-		System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1));
-
-		readFile(namesTxtFiles.get(entry - 1));
+				
+		if (namesTxtFiles.size() != 0) {
+		
+			System.out.println("Choisissez l'automate à traiter parmi la liste suivante :");
+	
+			for (int u = 1; u <= namesTxtFiles.size(); u++)
+				System.out.println(u + " - " + namesTxtFiles.get(u - 1));
+	
+			do {
+				System.out.println("\nVotre choix (entrez le numéro de l'automate) : ");
+				Scanner sc = new Scanner(System.in);
+				entry = sc.nextInt();
+			} while (entry <= 0 || entry > namesTxtFiles.size());
+	
+			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1));
+	
+			readFile(namesTxtFiles.get(entry - 1));
+			
+		} else {
+			System.out.println("Le dossier des automates est vide !");
+		}
 	}
 
 	private static void readFile(final String nom) {
