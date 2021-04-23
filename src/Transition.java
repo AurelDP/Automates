@@ -1,5 +1,5 @@
 
 public class Transition {
-	private String lettre;
-	private Etat etatPostTransi;
+	private String letter;
+	private State arrivalState;
 }
