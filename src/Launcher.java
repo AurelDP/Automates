@@ -6,6 +6,7 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		int entry;
+		Scanner sc = null;
 		
 		
 		/*
@@ -25,16 +26,21 @@ public class Launcher {
 	
 			do {
 				System.out.println("\nVotre choix (entrez le numéro de l'automate) : ");
-				Scanner sc = new Scanner(System.in);
+				sc = new Scanner(System.in);
 				entry = sc.nextInt();
 			} while (entry <= 0 || entry > namesTxtFiles.size());
+			
+			sc.close();
 	
 			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1));
-			
-			
 	
 			Automaton automaton = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			
+			/*
+			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
+			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
+			 * pour ajouter votre propre automate)
+			 */
 			
 			
 		} else {
@@ -114,8 +120,7 @@ public class Launcher {
 					
 					default:
 						String line = lineScanner.next();
-						String[] part = line.split("(?=\\d)(?<=\\D)(?=\\d)");
-						System.out.println(part[0] + " " + part[1]/* + " " + part[2]*/);
+						String[] part = line.split("(?<=\\d)(?=\\D)|(?<=\\D)(?=\\d)");
 						int name = Integer.parseInt(part[0]);
 						int a = Integer.parseInt(part[2]);
 						State arrival = null;
@@ -127,11 +132,10 @@ public class Launcher {
 							if (s.getName() == name) {
 								s.incrementNbrTransi();
 								s.setTransi(part[1], arrival);
-								System.out.println(s.getName() + part[1] + arrival);
+								System.out.println(s.getName() + part[1] + arrival.getName());
 							}
 						}
 						break;
-				
 				
 				}
 				
