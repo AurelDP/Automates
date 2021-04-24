@@ -6,6 +6,7 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		int entry;
+		Scanner sc = null;
 		
 		
 		/*
@@ -25,13 +26,22 @@ public class Launcher {
 	
 			do {
 				System.out.println("\nVotre choix (entrez le numéro de l'automate) : ");
-				Scanner sc = new Scanner(System.in);
+				sc = new Scanner(System.in);
 				entry = sc.nextInt();
 			} while (entry <= 0 || entry > namesTxtFiles.size());
+			
+			sc.close();
 	
 			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1));
 	
 			Automaton automaton = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
+			
+			/*
+			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
+			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
+			 * pour ajouter votre propre automate)
+			 */
+			
 			
 		} else {
 			System.out.println("Le dossier des automates est vide !");
@@ -39,24 +49,100 @@ public class Launcher {
 	}
 
 	private static Automaton getAutomatonFromFile(final String nom) {
-		int nbrLettersInLang;
-		int nbrStates;
-		int nbrInitialStates;
-		int nbrFinalStates;
-		int nbrTransitions;
+		int nbrLettersInLang = 0;
+		int nbrStates = 0;
+		int nbrInitialStates = 0;
+		int nbrFinalStates = 0;
+		int nbrTransitions = 0;
 		ArrayList<State> states = new ArrayList<State>();
 		
 		try {
 			FileInputStream file = new FileInputStream("./automates/" + nom);
 			Scanner scanner = new Scanner(file);
-
+			
+			int i = 1;
 			while (scanner.hasNextLine()) {
-				if (scanner.findInLine("a") != null)
-					System.out.println("Yes");
-				else {
-					System.out.println("No");
-					break;
+				
+				Scanner lineScanner = new Scanner(scanner.nextLine());
+				
+				switch (i) {
+					
+					case 1:
+						nbrLettersInLang = lineScanner.nextInt();
+						System.out.println("Nombre de lettres : " + nbrLettersInLang);
+						break;
+					
+					case 2:
+						nbrStates = lineScanner.nextInt();
+						for (int u = 0; u < nbrStates; u++) {
+							states.add(new State(u, false, false, 0, new ArrayList<Transition>()));
+						}
+						System.out.println("Nombre d'états : " + nbrStates);
+						System.out.println("Liste des états :");
+						for (State s : states) {
+							System.out.println(s.getName());
+						}
+						break;
+						
+					case 3:
+						nbrInitialStates = lineScanner.nextInt();
+						System.out.println("Nombre d'états initiaux : " + nbrInitialStates);
+						while (lineScanner.hasNext()) {
+							int num = lineScanner.nextInt();
+							for (State s : states) {
+								if (s.getName() == num) {
+									s.setInitial(true);
+									System.out.println("Etat initial : " + s.getName());
+								}
+							}
+						}
+						break;
+					
+					case 4:
+						nbrFinalStates = lineScanner.nextInt();
+						System.out.println("Nombre d'états finaux : " + nbrFinalStates);
+						while (lineScanner.hasNext()) {
+							int num = lineScanner.nextInt();
+							for (State s : states) {
+								if (s.getName() == num) {
+									s.setFinal(true);
+									System.out.println("Etat final : " + s.getName());
+								}
+							}
+						}
+						break;
+					
+					case 5:
+						nbrTransitions = lineScanner.nextInt();
+						System.out.println("Nombre de transitions : " + nbrTransitions);
+						System.out.println("Transitions :");
+						break;
+					
+					default:
+						String line = lineScanner.next();
+						String[] part = line.split("(?<=\\d)(?=\\D)|(?<=\\D)(?=\\d)");
+						int name = Integer.parseInt(part[0]);
+						int a = Integer.parseInt(part[2]);
+						State arrival = null;
+						for (State s : states) {
+							if (s.getName() == a)
+								arrival = s;
+						}
+						for (State s : states) {
+							if (s.getName() == name) {
+								s.incrementNbrTransi();
+								s.setTransi(part[1], arrival);
+								System.out.println(s.getName() + part[1] + arrival.getName());
+							}
+						}
+						break;
+				
 				}
+				
+				i ++;
+				
+				lineScanner.close();
+				
 			}
 			scanner.close();
 

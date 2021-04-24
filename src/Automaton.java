@@ -30,7 +30,6 @@ public class Automaton {
 		for (int i = 0; i < nbrLettersInLang; i++) {
 			lettersInLang.add(String.valueOf((char)(i + 97)));
 		}
-		System.out.println(lettersInLang);
 		return lettersInLang;
 	}
 
