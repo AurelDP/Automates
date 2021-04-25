@@ -8,13 +8,6 @@ public class Launcher {
 		int entry;
 		Scanner sc = null;
 		
-		
-		/*
-		 * METTRE ICI POUR TESTER, NE PAS S'OCCUPER DE TOUT CE QU'IL Y A EN DESSOUS
-		 * (Je devrais le finir dans la soirée du 23 (Aurel))
-		 */
-		
-		
 		ArrayList<String> namesTxtFiles = findNamesInFile(new File("./automates"));
 				
 		if (namesTxtFiles.size() != 0) {
@@ -40,6 +33,9 @@ public class Launcher {
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
 			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
 			 * pour ajouter votre propre automate)
+			 * 
+			 * METTRE ICI LES TESTS DES ALGOS (Déterminisation, etc)
+			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
 			
 			
