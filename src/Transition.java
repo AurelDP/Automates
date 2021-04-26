@@ -9,7 +9,7 @@ public class Transition {
 	}
 	
 	public Transition(Transition transition) {
-		this.letter = transition.letter;
+		this.letter = new String(transition.letter);
 		// arrivalState is defined in "Automaton" class, after all new states are created
 		this.arrivalState = null;
 	}

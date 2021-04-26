@@ -91,7 +91,7 @@ public class Automaton {
 			// We loop all the states and if a state is initial, we display it
 			for (State s : states) {
 				if (s.isInitial())
-					System.out.println(s.getName());
+					System.out.println("[" + s.getName() + "]");
 			}
 		// If there are more than 2 initial states, we apply a slightly different display
 		} else if (nbrInitialStates >= 2) {
@@ -113,7 +113,7 @@ public class Automaton {
 			System.out.print("Etat final : ");
 			for (State s : states) {
 				if (s.isFinal())
-					System.out.println(s.getName());
+					System.out.println("[" + s.getName() + "]");
 			}
 		} else if (nbrFinalStates >= 2) {
 			System.out.print("Etats finaux : [");
@@ -141,13 +141,18 @@ public class Automaton {
 				for (String car : lettersInLang) {
 					System.out.print("   ");
 					String arrivalState = "-";
+					int i = 0;
 					// For each transition of the state
 					for (Transition t : s.getTransiList()) {
 						// If a transition has the same letter as the character in the transition table
 						if (t.getLetter().equals(car)) {
-							// The number of the arrival state is displayed and we break the loop
-							arrivalState = String.valueOf(t.getArrivalStateName());
-							break;
+							// The number of the arrival state is displayed
+							if (i == 0)
+								arrivalState = String.valueOf(t.getArrivalStateName());
+							// If there is more than one transition with the same letter, then we put it in the arrivalState string
+							else
+								arrivalState += ("," + String.valueOf(t.getArrivalStateName()));
+							i ++;
 						}
 					}
 					System.out.print(arrivalState + "   ");
