@@ -15,6 +15,17 @@ public class State {
 		this.transitions = transitions;
 	}
 	
+	public State(State state) {
+		this.nameState = state.nameState;
+		this.isFinal = state.isFinal;
+		this.isInitial = state.isInitial;
+		this.nbrTransitions = state.nbrTransitions;
+		this.transitions = new ArrayList<Transition>();
+		for (Transition t : state.transitions) {
+			this.transitions.add(new Transition(t));
+		}
+	}
+	
 	public int getName() {
 		return nameState;
 	}
@@ -49,5 +60,38 @@ public class State {
 	
 	public void setTransi(String letter, State arrivalState) {
 		transitions.add(new Transition(letter, arrivalState));
+	}
+	
+	public String toStringTransi() {
+		if (nbrTransitions == 1)
+			return (nameState + String.valueOf(this.transitions.get(0).getLetter()) + this.transitions.get(0).getArrivalStateName());
+		else if (nbrTransitions >= 2) {
+			String r = "";
+			int i = 0;
+			for (Transition t : transitions) {
+				if (i < nbrTransitions-1)
+					r += (nameState + t.getLetter() + t.getArrivalStateName() + ",");
+				else
+					r += (nameState + t.getLetter() + t.getArrivalStateName());
+				i ++;
+			}
+			return r;
+		}
+		return null;
+	}
+	
+	public void displayTransi() {
+		if (nbrTransitions == 1)
+			System.out.print(nameState + this.transitions.get(0).getLetter() + this.transitions.get(0).getArrivalStateName());
+		else if (nbrTransitions >= 2) {
+			int i = 0;
+			for (Transition t : transitions) {
+				if (i < nbrTransitions-1)
+					System.out.print(nameState + t.getLetter() + t.getArrivalStateName() + ",");
+				else
+					System.out.print(nameState + t.getLetter() + t.getArrivalStateName());
+				i ++;
+			}
+		}
 	}
 }
