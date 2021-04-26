@@ -74,6 +74,7 @@ public class Automaton {
 		}
 	}
 	
+	// The number of letters is converted into an alphabet, by the ASCII code and a loop
 	private ArrayList<String> getLettersFromNbr(int nbrLettersInLang) {
 		lettersInLang = new ArrayList<String>();
 		for (int i = 0; i < nbrLettersInLang; i++) {
