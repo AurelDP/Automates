@@ -159,5 +159,8 @@ public class Automaton {
 		
 	}
 	
+	public ArrayList<State> getStates() {
+		return states;
+	}
 
 }

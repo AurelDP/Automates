@@ -22,4 +22,16 @@ public class Transition {
 		return arrivalState;
 	}
 	
+	public int getArrivalStateName() {
+		return arrivalState.getName();
+	}
+	
+	public void setLetter(String s) {
+		this.letter = s;
+	}
+	
+	public void setArrivalState(State state) {
+		this.arrivalState = state;
+	}
+	
 }
