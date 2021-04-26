@@ -81,5 +81,83 @@ public class Automaton {
 		}
 		return lettersInLang;
 	}
+	
+	public void display() {
+		System.out.println("\nAffichage de l'automate :\n");
+		
+		if (nbrInitialStates == 1) {
+			System.out.print("Etat initial : ");
+			// We loop all the states and if a state is initial, we display it
+			for (State s : states) {
+				if (s.isInitial())
+					System.out.println(s.getName());
+			}
+		// If there are more than 2 initial states, we apply a slightly different display
+		} else if (nbrInitialStates >= 2) {
+			System.out.print("Etats initiaux : [");
+			int i = 0;
+			for (State s : states) {
+				if (s.isInitial() && i < nbrInitialStates-1) {
+					System.out.print(s.getName() + ",");
+					i ++;
+				} else if (s.isInitial() && i == nbrInitialStates-1) {
+					System.out.println(s.getName() + "]");
+					i ++;
+				}
+			}
+		}
+		
+		// Same principle as for the initial states
+		if (nbrFinalStates == 1) {
+			System.out.print("Etat final : ");
+			for (State s : states) {
+				if (s.isFinal())
+					System.out.println(s.getName());
+			}
+		} else if (nbrFinalStates >= 2) {
+			System.out.print("Etats finaux : [");
+			int i = 0;
+			for (State s : states) {
+				if (s.isFinal() && i < nbrFinalStates-1) {
+					System.out.print(s.getName() + ",");
+					i ++;
+				} else if (s.isFinal() && i == nbrFinalStates-1) {
+					System.out.println(s.getName() + "]");
+					i ++;
+				}
+			}
+		}
+		
+		if (nbrTransitions >= 1) {
+			System.out.print("Table de transitions :\n       ");
+			for (String car : lettersInLang) {
+				System.out.print("   " + car + "   ");
+			}
+			System.out.print("\n");
+			for (State s : states) {
+				System.out.print("   " + s.getName() + "   ");
+				// After the name of each state, we go through the letters of the alphabet
+				for (String car : lettersInLang) {
+					System.out.print("   ");
+					String arrivalState = "-";
+					// For each transition of the state
+					for (Transition t : s.getTransiList()) {
+						// If a transition has the same letter as the character in the transition table
+						if (t.getLetter().equals(car)) {
+							// The number of the arrival state is displayed and we break the loop
+							arrivalState = String.valueOf(t.getArrivalStateName());
+							break;
+						}
+					}
+					System.out.print(arrivalState + "   ");
+				}
+				System.out.print("\n");
+			}
+		} else {
+			System.out.println("Pas de transitions pour cet automate !");
+		}
+		
+	}
+	
 
 }
