@@ -15,6 +15,17 @@ public class State {
 		this.transitions = transitions;
 	}
 	
+	public State(State state) {
+		this.nameState = state.nameState;
+		this.isFinal = state.isFinal;
+		this.isInitial = state.isInitial;
+		this.nbrTransitions = state.nbrTransitions;
+		this.transitions = new ArrayList<Transition>();
+		for (Transition t : state.transitions) {
+			this.transitions.add(new Transition(t));
+		}
+	}
+	
 	public int getName() {
 		return nameState;
 	}

@@ -8,6 +8,12 @@ public class Transition {
 		this.arrivalState = arrivalState;
 	}
 	
+	public Transition(Transition transition) {
+		this.letter = transition.letter;
+		// arrivalState is defined in "Automaton" class, after all new states are created
+		this.arrivalState = null;
+	}
+	
 	public String getLetter() {
 		return letter;
 	}
