@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Automaton {
 	private int nbrLettersInLang;
@@ -69,7 +70,6 @@ public class Automaton {
 						break;
 					}
 				}
-				
 			}
 		}
 	}
@@ -167,6 +167,83 @@ public class Automaton {
 	
 	public ArrayList<State> getStates() {
 		return states;
+		
 	}
+	
+	
+	
+	
+	public void completion() { 
+		nbrStates ++;
+		states.add(new State( nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
+		State sTrash = states.get(nbrStates-1);
+		for (int i = 0 ; i<nbrLettersInLang ; i++ ) {
+			sTrash.getTransiList().add(new Transition( lettersInLang.get(i), sTrash));
+		}
+		
+		for (State s : states) {
+			ArrayList<String> copyAlpha = new ArrayList<String>(lettersInLang);
+			if (s.getNbrTransitions() != nbrLettersInLang) {
+				for (Transition t : s.getTransiList()) {
+					Iterator<String> it  = copyAlpha.iterator();
+					
+					while (it.hasNext()) { // loop the list copyAlpha and remove during it
+						String i = it.next();
+						if (t.getLetter().equals(i)) {
+							it.remove();
+						}
+					}
+				}
+				
+				for (String x : copyAlpha) {
+					s.getTransiList().add(new Transition(x, sTrash));
+				}
+			}
+		}
+	}
+	
+			
+			
+	
+	/*public Automaton miniminsation() {
+		
+		ArrayList<ArrayList<State>> firstLibrary = new ArrayList<ArrayList<State>>(nbrStates); // faire un array liste 2D
+		int i,j = 0;
+		
+		for (State s : states ) {
+			for (Transition t : s.getTransiList()) {
+				
+				if (t.getArrivalState().isFinal()){
+					firstLibrary.get(i).get(j).add(666);
+				} else {
+					firstLibrary.get(i).get(j).add(667);
+				}
+				i = i % nbrStates;
+				j = j % 2;
+			}
+		}
+		
+		
+		System.out.println("\n\n\n\n");
+		for (State s : firstLibrary ) {
+			System.out.println(s.getName());
+		}
+		System.out.println("\n\n\n\n");
+		return null;
+		
+	}
+	
+	
+	
+	
+	public void display2Dtab(ArrayList<ArrayList<State>> firstLibrary) {
+
+		for (int i = 0; i <firstLibrary.size(); i++) { 
+	        for (int j = 0; j <firstLibrary.get(i).size(); j++) { 
+	              System.out.print(firstLibrary.get(i).get(j) + " "); 
+	         } 
+	      System.out.println(); 
+	     } 
+	}*/
 
 }

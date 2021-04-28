@@ -32,6 +32,15 @@ public class Launcher {
 			// We recover the chosen automaton and we write it in the program memory
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			AF.display();
+			//Automaton AC = new Automaton(AF);
+			System.out.println("\n\n\n COMPLETION :\n\n\n");
+			
+			AF.completion();
+			
+			AF.display();
+			
+			
+			//System.out.printf("\n\n transition : " + AF.miniminsation() );
 			
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"

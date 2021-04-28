@@ -5,7 +5,7 @@ public class State {
 	private boolean isFinal;
 	private boolean isInitial;
 	private int nbrTransitions;
-	private ArrayList<Transition> transitions;
+	private ArrayList<Transition> transitions; /// EX : [(string)a States: 2]
 	
 	public State(int nameState, boolean isFinal, boolean isInitial, int nbrTransitions, ArrayList<Transition> transitions) {
 		this.nameState = nameState;
@@ -57,6 +57,8 @@ public class State {
 	public void incrementNbrTransi() {
 		this.nbrTransitions ++;
 	}
+	
+	
 	
 	public void setTransi(String letter, State arrivalState) {
 		transitions.add(new Transition(letter, arrivalState));
