@@ -24,14 +24,31 @@ public class Launcher {
 				sc = new Scanner(System.in);
 				entry = sc.nextInt();
 			} while (entry <= 0 || entry > namesTxtFiles.size());
-			
-			sc.close();
 	
 			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 			
 			// We recover the chosen automaton and we write it in the program memory
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			AF.display();
+			
+			String[] words = readWords(sc);
+			if (words.length != 0) {
+				System.out.println("Mots entrés :");
+				for (String w : words) {
+					if (w.matches("[*]+"))
+						System.out.print("Mot vide");
+					else
+						System.out.print(w);
+					if (recognizedWord(AF, w))
+						System.out.println(" : Reconnu");
+					else
+						System.out.println(" : Non reconnu");
+				}
+			} else {
+				System.out.println("Aucun mot n'a été entré...");
+			}
+			
+			sc.close();
 			
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
@@ -172,6 +189,63 @@ public class Launcher {
 			}
 		}
 		return names;
+	}
+	
+	private static String[] readWords(Scanner sc) {
+		String line;
+		String[] words;
+		do {
+			System.out.print("\nListe des mots à reconnaître (séparés par un espace).\n"
+					+ "Le mot vide est noté \"*\".\n"
+					+ "Votre liste : ");
+			sc.nextLine(); // This line is used to empty the buffer
+			line = sc.nextLine();
+		} while (line.equals(""));
+		words = line.split("\\s+");
+		return words;
+	}
+	
+	private static boolean recognizedWord(Automaton a, String word) {
+		State currentState = null;
+		
+		// Recover of the initial state
+		for (State s : a.getStates()) {
+			if (s.isInitial()) {
+				currentState = s;
+				break;
+			}
+		}
+		
+		// If there is no initial state, then no words can be recognized
+		if (currentState == null)
+			return false;
+		
+		// Recognition of void word
+		if (word.matches("[*]+") && currentState.isInitial() && currentState.isFinal())
+			return true;
+		
+		// If void symbol is in word, we remove it
+		word.replace("*", "");
+		
+		// Convert word into array of chars
+		char[] chars = word.toCharArray();
+		
+		// Recognition of other words
+		for (char c : chars) {
+			boolean foundLetter = false;
+			for (Transition t : currentState.getTransiList()) {
+				if (c == t.getLetter().charAt(0)) {
+					foundLetter = true;
+					currentState = t.getArrivalState();
+					break;
+				}
+			}
+			if (!foundLetter)
+				return false;
+		}
+		if (currentState.isFinal())
+			return true;
+		return false;
 	}
 
 }
