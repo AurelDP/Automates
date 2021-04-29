@@ -51,7 +51,7 @@ public class Launcher {
 			*/
 			
 			Automaton AC = new Automaton(AF);
-			AC.display();
+
 						
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
@@ -61,6 +61,9 @@ public class Launcher {
 			 * METTRE ICI LES TESTS DES ALGOS (Déterminisation, etc)
 			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
+			
+			AC.standardization();
+			AC.display();
 			
 			sc.close();
 			

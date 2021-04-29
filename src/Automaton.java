@@ -168,5 +168,55 @@ public class Automaton {
 	public ArrayList<State> getStates() {
 		return states;
 	}
-
+	
+	
+	public void complementaryAutomaton() {
+		// faire determinisation 
+		for (State S : states) {
+			if(S.isFinal()== true) {
+				S.setFinal(false);
+			}
+			else {
+				S.setFinal(true);
+			}
+		}
+	}
+	
+	public boolean isStandard() {
+		if (nbrInitialStates > 1)
+			return false;			
+		else {
+			for (State S : states) {
+				for (Transition T : S.getTransiList()) {
+					if (T.getArrivalState().isInitial())
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public void standardization() {
+		if (!isStandard()) {
+			ArrayList<Transition> listTrans = new ArrayList<Transition>();
+			boolean sFinal = false;
+			for (State S : states) {
+				if (S.isInitial()) {
+					if (S.isFinal()) {
+						sFinal = true;
+					}
+					for (Transition T : S.getTransiList()){
+						listTrans.add(new Transition(T));
+					}
+				}
+			}
+			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang ,listTrans));
+			nbrStates ++;
+		} else
+			System.out.println("L'automate est déjà standard");
+	}
+	
+	public void asynchronousAutomaton() {
+		
+	}
 }
