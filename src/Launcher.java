@@ -29,7 +29,18 @@ public class Launcher {
 			
 			// We recover the chosen automaton and we write it in the program memory
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
+			System.out.println("\n\nAUTOMATE DE BASE");
 			AF.display();
+			
+			Automaton AFstd = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE STANDARD");
+			AFstd.standardization();
+			AFstd.display();
+			
+			Automaton AFcomp = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE COMPLEMENTAIRE");
+			AFcomp.complementaryAutomaton();
+			AFcomp.display();
 			
 			/*
 			String[] words = readWords(sc);
@@ -50,8 +61,6 @@ public class Launcher {
 			}
 			*/
 			
-			Automaton AC = new Automaton(AF);
-
 						
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
@@ -61,8 +70,6 @@ public class Launcher {
 			 * METTRE ICI LES TESTS DES ALGOS (Déterminisation, etc)
 			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
-			AC.complementaryAutomaton();
-			AC.display();
 			
 			sc.close();
 			

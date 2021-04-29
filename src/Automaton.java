@@ -173,11 +173,10 @@ public class Automaton {
 	public void complementaryAutomaton() {
 		// faire complet 
 		for (State S : states) {
-			if(S.isFinal()) {
+			if (S.isFinal()) {
 				S.setFinal(false);
 				nbrFinalStates --;
-			}
-			else {
+			} else {
 				S.setFinal(true);
 				nbrFinalStates ++;
 			}
@@ -206,7 +205,7 @@ public class Automaton {
 				if (S.isInitial()) {
 					if (S.isFinal()) 
 						sFinal = true;
-					for (Transition T : S.getTransiList()){
+					for (Transition T : S.getTransiList()) {
 						listTrans.add(new Transition(T.getLetter(), T.getArrivalState()));
 						nbrTransitions ++;
 					}
@@ -216,9 +215,9 @@ public class Automaton {
 			}
 			if (sFinal)
 				nbrFinalStates ++;
-			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang ,listTrans));
+			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang, listTrans));
 			nbrStates ++;
 		} else
-			System.out.println("L'automate est déjà standard");
+			System.out.println("L'automate est déjà standard !");
 	}
 }
