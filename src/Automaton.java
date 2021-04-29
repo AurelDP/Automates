@@ -64,7 +64,7 @@ public class Automaton {
 				// In the newStateWithNewTransi
 				for (Transition newT : newStateWithNewTransi.getTransiList()) {
 					// We look for the new transition that has the same letter as the old transition
-					if (newT.getLetter() == oldLetter) {
+					if (newT.getLetter().equals(oldLetter)) {
 						newT.setArrivalState(newArrivalState);
 						break;
 					}
