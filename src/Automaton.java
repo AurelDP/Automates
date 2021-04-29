@@ -221,8 +221,4 @@ public class Automaton {
 		} else
 			System.out.println("L'automate est déjà standard");
 	}
-	
-	public void asynchronousAutomaton() {
-		
-	}
 }
