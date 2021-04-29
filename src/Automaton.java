@@ -171,13 +171,15 @@ public class Automaton {
 	
 	
 	public void complementaryAutomaton() {
-		// faire determinisation 
+		// faire complet 
 		for (State S : states) {
-			if(S.isFinal()== true) {
+			if(S.isFinal()) {
 				S.setFinal(false);
+				nbrFinalStates --;
 			}
 			else {
 				S.setFinal(true);
+				nbrFinalStates ++;
 			}
 		}
 	}
@@ -202,14 +204,18 @@ public class Automaton {
 			boolean sFinal = false;
 			for (State S : states) {
 				if (S.isInitial()) {
-					if (S.isFinal()) {
+					if (S.isFinal()) 
 						sFinal = true;
-					}
 					for (Transition T : S.getTransiList()){
-						listTrans.add(new Transition(T));
+						listTrans.add(new Transition(T.getLetter(), T.getArrivalState()));
+						nbrTransitions ++;
 					}
+					S.setInitial(false);
+					nbrInitialStates --;
 				}
 			}
+			if (sFinal)
+				nbrFinalStates ++;
 			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang ,listTrans));
 			nbrStates ++;
 		} else

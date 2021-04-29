@@ -61,8 +61,7 @@ public class Launcher {
 			 * METTRE ICI LES TESTS DES ALGOS (Déterminisation, etc)
 			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
-			
-			AC.standardization();
+			AC.complementaryAutomaton();
 			AC.display();
 			
 			sc.close();
