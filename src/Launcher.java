@@ -31,6 +31,7 @@ public class Launcher {
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			AF.display();
 			
+			/*
 			String[] words = readWords(sc);
 			if (words.length != 0) {
 				System.out.println("Mots entrés :");
@@ -47,9 +48,11 @@ public class Launcher {
 			} else {
 				System.out.println("Aucun mot n'a été entré...");
 			}
+			*/
 			
-			sc.close();
-			
+			Automaton AC = new Automaton(AF);
+			AC.display();
+						
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
 			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
@@ -59,6 +62,7 @@ public class Launcher {
 			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
 			
+			sc.close();
 			
 		} else {
 			System.out.println("Le dossier des automates est vide !");
