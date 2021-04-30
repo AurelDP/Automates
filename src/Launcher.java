@@ -32,12 +32,12 @@ public class Launcher {
 			// We recover the chosen automaton and we write it in the program memory
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 			AF.display();
-			//Automaton AC = new Automaton(AF);
+			Automaton AC = new Automaton(AF);
 			System.out.println("\n\n\n COMPLETION :\n\n\n");
 			
-			AF.completion();
+			AC.completion();
 			
-			AF.display();
+			AC.display();
 			
 			
 			//System.out.printf("\n\n transition : " + AF.miniminsation() );

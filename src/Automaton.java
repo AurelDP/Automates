@@ -175,7 +175,7 @@ public class Automaton {
 	
 	public void completion() { 
 		nbrStates ++;
-		states.add(new State( nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
+		states.add(new State(nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
 		State sTrash = states.get(nbrStates-1);
 		for (int i = 0 ; i<nbrLettersInLang ; i++ ) {
 			sTrash.getTransiList().add(new Transition( lettersInLang.get(i), sTrash));
