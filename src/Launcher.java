@@ -42,6 +42,11 @@ public class Launcher {
 			AFcomp.complementaryAutomaton();
 			AFcomp.display();
 			
+			Automaton AFD = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE DETERMINISE");
+			AFD.determinization();
+			AFD.display();
+			
 			/*
 			String[] words = readWords(sc);
 			if (words.length != 0) {
