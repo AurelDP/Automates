@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Automaton {
 	private int nbrLettersInLang;
@@ -219,5 +223,78 @@ public class Automaton {
 			nbrStates ++;
 		} else
 			System.out.println("L'automate est déjà standard !");
+	}
+	
+	public void determinization() {
+		HashMap<State, ArrayList<State>> associatedStates = new HashMap<State, ArrayList<State>>();
+		
+		ArrayList<State> stateCollection = new ArrayList<State>();
+		if (nbrInitialStates > 1) {
+			states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
+			nbrStates ++;
+			
+			// We check all initialStates
+			for (State s : states) {
+				if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
+					stateCollection.add(s);
+			}
+			associatedStates.put(states.get(nbrStates-1), stateCollection);
+			
+		} else {
+			for (State s : states) {
+				if (s.isInitial()) {
+					stateCollection.add(s);
+					associatedStates.put(s, stateCollection);
+					break;
+				}
+			}
+		}
+		
+		// For each state that is key in HashMap (which is supposed to be a new state)
+		for (State s : associatedStates.keySet()) {
+			// For each letter in alphabet
+			for (String c : lettersInLang) {
+				// For each old state associated with the new one
+				stateCollection = new ArrayList<State>();
+				int i = 0;
+				for (State mixedState : associatedStates.get(s)) {
+					// For each transition in this old state
+					for (Transition t : mixedState.getTransiList()) {
+						// If letters are equals, we increment i
+						if (t.getLetter().equals(c))
+							i ++;
+					}
+				}
+				// If there is more than one transition with same letter, we create
+				// a new state and we link it with arrivalStates in these transitions
+				if (i > 1) {
+					states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
+					nbrStates ++;
+					
+					for (State mixedState : associatedStates.get(s)) {
+						for (Transition t : mixedState.getTransiList()) {
+							if (t.getLetter().equals(c))
+								stateCollection.add(t.getArrivalState());
+						}
+					}
+					associatedStates.put(states.get(nbrStates-1), stateCollection);
+				// Else, we simply add the arrivalState to associatedStates (because arrivalState is already
+				// created and doesn't need to be mixed with other state)
+				} else {
+					for (State mixedState : associatedStates.get(s)) {
+						for (Transition t : mixedState.getTransiList()) {
+							if (t.getLetter().equals(c)) {
+								stateCollection.add(t.getArrivalState());
+								// If the new state is not already in the associatedStates
+								// (make the "while" stop when there is no new state in associatedStates)
+								if (!associatedStates.containsKey(t.getArrivalState()))
+									associatedStates.put(t.getArrivalState(), stateCollection);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
