@@ -34,48 +34,6 @@ public class Automaton {
 		for (State s : automaton.states) {
 			this.states.add(new State(s));
 		}
-		
-		// Transitions are completed here (and not in "Transition" class), after generating all the states
-		// For each old state
-		for (State oldS : automaton.states) {
-			
-			// We recover information from the old state
-			int oldNameState = oldS.getName();
-			
-			// For each old transition of these old states
-			for (Transition oldTransi : oldS.getTransiList()) {
-				
-				// We recover information from the old transition
-				int nameOldArrivalState = oldTransi.getArrivalStateName();
-				String oldLetter = oldTransi.getLetter();
-				
-				// We define two references to state (one which is the state containing the transition, the other which is the arrival state of the transition)
-				State newStateWithNewTransi = null;
-				State newArrivalState = null;
-				
-				// For each new state
-				for (State newS : this.states) {
-					
-					// If the name of the state corresponds to an arrival state of the old transition
-					if (newS.getName() == nameOldArrivalState)
-						newArrivalState = newS;
-					
-					// If the name of the state corresponds to the name of the old state with old transition in it
-					if (newS.getName() == oldNameState)
-						newStateWithNewTransi = newS;
-				}
-				
-				// In the newStateWithNewTransi
-				for (Transition newT : newStateWithNewTransi.getTransiList()) {
-					// We look for the new transition that has the same letter as the old transition
-					if (newT.getLetter().equals(oldLetter)) {
-						newT.setArrivalState(newArrivalState);
-						break;
-					}
-				}
-				
-			}
-		}
 	}
 	
 	// The number of letters is converted into an alphabet, by the ASCII code and a loop
@@ -173,6 +131,13 @@ public class Automaton {
 		return states;
 	}
 	
+	public State getStateFromName(int name) {
+		for (State s : states) {
+			if (s.getName() == name)
+				return s;
+		}
+		return null;
+	}
 	
 	public void complementaryAutomaton() {
 		// faire complet 
@@ -193,7 +158,7 @@ public class Automaton {
 		else {
 			for (State S : states) {
 				for (Transition T : S.getTransiList()) {
-					if (T.getArrivalState().isInitial())
+					if (getStateFromName(T.getArrivalStateName()).isInitial())
 						return false;
 				}
 			}
@@ -210,7 +175,7 @@ public class Automaton {
 					if (S.isFinal()) 
 						sFinal = true;
 					for (Transition T : S.getTransiList()) {
-						listTrans.add(new Transition(T.getLetter(), T.getArrivalState()));
+						listTrans.add(new Transition(T));
 						nbrTransitions ++;
 					}
 					S.setInitial(false);
@@ -220,6 +185,7 @@ public class Automaton {
 			if (sFinal)
 				nbrFinalStates ++;
 			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang, listTrans));
+			nbrInitialStates ++;
 			nbrStates ++;
 		} else
 			System.out.println("L'automate est déjà standard !");
@@ -263,7 +229,7 @@ public class Automaton {
 					for (State mixedState : associatedStates.get(s)) {
 						for (Transition t : mixedState.getTransiList()) {
 							if (t.getLetter().equals(c))
-								stateCollection.add(t.getArrivalState());
+								stateCollection.add(getStateFromName(t.getArrivalStateName()));
 						}
 					}
 					associatedStates.put(states.get(nbrStates-1), stateCollection);
@@ -273,11 +239,11 @@ public class Automaton {
 					for (State mixedState : associatedStates.get(s)) {
 						for (Transition t : mixedState.getTransiList()) {
 							if (t.getLetter().equals(c)) {
-								stateCollection.add(t.getArrivalState());
+								stateCollection.add(getStateFromName(t.getArrivalStateName()));
 								// If the new state is not already in the associatedStates
 								// (make the "while" stop when there is no new state in associatedStates)
-								if (!associatedStates.containsKey(t.getArrivalState()))
-									associatedStates.put(t.getArrivalState(), stateCollection);
+								if (!associatedStates.containsKey(getStateFromName(t.getArrivalStateName())))
+									associatedStates.put(getStateFromName(t.getArrivalStateName()), stateCollection);
 								break;
 							}
 						}
