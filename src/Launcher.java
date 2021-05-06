@@ -13,14 +13,14 @@ public class Launcher {
 				
 		if (namesTxtFiles.size() != 0) {
 		
-			System.out.print("Choisissez l'automate à traiter parmi la liste suivante :\n");
+			System.out.print("Choisissez l'automate ï¿½ traiter parmi la liste suivante :\n");
 			
 			// We display all the file names and ask the user to choose an automaton from the list
 			for (int u = 1; u <= namesTxtFiles.size(); u++)
 				System.out.println(u + " - " + namesTxtFiles.get(u - 1));
 	
 			do {
-				System.out.print("\nVotre choix (entrez le numéro de l'automate) : ");
+				System.out.print("\nVotre choix (entrez le numï¿½ro de l'automate) : ");
 				sc = new Scanner(System.in);
 				entry = sc.nextInt();
 			} while (entry <= 0 || entry > namesTxtFiles.size());
@@ -42,10 +42,22 @@ public class Launcher {
 			AFcomp.complementaryAutomaton();
 			AFcomp.display();
 			
+			Automaton AFC = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE COMPLET");
+			AFC.completion();
+			AFC.display();
+			
+			/*
+			Automaton AFD = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE DETERMINISE");
+			AFD.determinization();
+			AFD.display();
+			*/
+			
 			/*
 			String[] words = readWords(sc);
 			if (words.length != 0) {
-				System.out.println("Mots entrés :");
+				System.out.println("Mots entrï¿½s :");
 				for (String w : words) {
 					if (w.matches("[*]+"))
 						System.out.print("Mot vide");
@@ -57,18 +69,18 @@ public class Launcher {
 						System.out.println(" : Non reconnu");
 				}
 			} else {
-				System.out.println("Aucun mot n'a été entré...");
+				System.out.println("Aucun mot n'a ï¿½tï¿½ entrï¿½...");
 			}
 			*/
 			
 						
 			/*
-			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
-			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
+			 * L'automate gï¿½nï¿½rï¿½ dans le fichier txt est stockï¿½ dans la variable "automaton"
+			 * Vous pouvez faire vos tests ï¿½ partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
 			 * pour ajouter votre propre automate)
 			 * 
-			 * METTRE ICI LES TESTS DES ALGOS (Déterminisation, etc)
-			 * Les méthodes seront écrites dans les classes correspondantes
+			 * METTRE ICI LES TESTS DES ALGOS (Dï¿½terminisation, etc)
+			 * Les mï¿½thodes seront ï¿½crites dans les classes correspondantes
 			 */
 			
 			sc.close();
@@ -156,15 +168,7 @@ public class Launcher {
 						// The first part of the split line is converted to an int for the name of the pre-transition state
 						int name = Integer.parseInt(part[0]);
 						// The third part corresponds to the arrival state
-						int a = Integer.parseInt(part[2]);
-						State arrival = null;
-						// The real arrival state is recovered thanks to the name recovered before
-						for (State s : states) {
-							if (s.getName() == a) {
-								arrival = s;
-								break;
-							}
-						}
+						int arrival = Integer.parseInt(part[2]);
 						// Then we modify this state to add a transition, using the recovered information
 						for (State s : states) {
 							if (s.getName() == name) {
@@ -208,8 +212,8 @@ public class Launcher {
 		String line;
 		String[] words;
 		do {
-			System.out.print("\nListe des mots à reconnaître (séparés par un espace).\n"
-					+ "Le mot vide est noté \"*\".\n"
+			System.out.print("\nListe des mots ï¿½ reconnaï¿½tre (sï¿½parï¿½s par un espace).\n"
+					+ "Le mot vide est notï¿½ \"*\".\n"
 					+ "Votre liste : ");
 			sc.nextLine(); // This line is used to empty the buffer
 			line = sc.nextLine();
@@ -249,7 +253,7 @@ public class Launcher {
 			for (Transition t : currentState.getTransiList()) {
 				if (c == t.getLetter().charAt(0)) {
 					foundLetter = true;
-					currentState = t.getArrivalState();
+					currentState = a.getStateFromName(t.getArrivalStateName());
 					break;
 				}
 			}
