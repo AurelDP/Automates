@@ -43,6 +43,13 @@ public class Launcher {
 			AFcomp.display();
 			
 			/*
+			Automaton AFD = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE DETERMINISE");
+			AFD.determinization();
+			AFD.display();
+			*/
+			
+			/*
 			String[] words = readWords(sc);
 			if (words.length != 0) {
 				System.out.println("Mots entrés :");
@@ -156,15 +163,7 @@ public class Launcher {
 						// The first part of the split line is converted to an int for the name of the pre-transition state
 						int name = Integer.parseInt(part[0]);
 						// The third part corresponds to the arrival state
-						int a = Integer.parseInt(part[2]);
-						State arrival = null;
-						// The real arrival state is recovered thanks to the name recovered before
-						for (State s : states) {
-							if (s.getName() == a) {
-								arrival = s;
-								break;
-							}
-						}
+						int arrival = Integer.parseInt(part[2]);
 						// Then we modify this state to add a transition, using the recovered information
 						for (State s : states) {
 							if (s.getName() == name) {
@@ -249,7 +248,7 @@ public class Launcher {
 			for (Transition t : currentState.getTransiList()) {
 				if (c == t.getLetter().charAt(0)) {
 					foundLetter = true;
-					currentState = t.getArrivalState();
+					currentState = a.getStateFromName(t.getArrivalStateName());
 					break;
 				}
 			}
