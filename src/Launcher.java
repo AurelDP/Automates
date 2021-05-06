@@ -42,6 +42,11 @@ public class Launcher {
 			AFcomp.complementaryAutomaton();
 			AFcomp.display();
 			
+			Automaton AFC = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE COMPLET");
+			AFC.completion();
+			AFC.display();
+			
 			/*
 			Automaton AFD = new Automaton(AF);
 			System.out.println("\n\nAUTOMATE DETERMINISE");
