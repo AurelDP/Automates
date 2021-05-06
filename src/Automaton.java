@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Automaton {
 	private int nbrLettersInLang;
@@ -30,47 +33,6 @@ public class Automaton {
 		this.states = new ArrayList<State>(); 
 		for (State s : automaton.states) {
 			this.states.add(new State(s));
-		}
-		
-		// Transitions are completed here (and not in "Transition" class), after generating all the states
-		// For each old state
-		for (State oldS : automaton.states) {
-			
-			// We recover information from the old state
-			int oldNameState = oldS.getName();
-			
-			// For each old transition of these old states
-			for (Transition oldTransi : oldS.getTransiList()) {
-				
-				// We recover information from the old transition
-				int nameOldArrivalState = oldTransi.getArrivalStateName();
-				String oldLetter = oldTransi.getLetter();
-				
-				// We define two references to state (one which is the state containing the transition, the other which is the arrival state of the transition)
-				State newStateWithNewTransi = null;
-				State newArrivalState = null;
-				
-				// For each new state
-				for (State newS : this.states) {
-					
-					// If the name of the state corresponds to an arrival state of the old transition
-					if (newS.getName() == nameOldArrivalState)
-						newArrivalState = newS;
-					
-					// If the name of the state corresponds to the name of the old state with old transition in it
-					if (newS.getName() == oldNameState)
-						newStateWithNewTransi = newS;
-				}
-				
-				// In the newStateWithNewTransi
-				for (Transition newT : newStateWithNewTransi.getTransiList()) {
-					// We look for the new transition that has the same letter as the old transition
-					if (newT.getLetter() == oldLetter) {
-						newT.setArrivalState(newArrivalState);
-						break;
-					}
-				}
-			}
 		}
 	}
 	
@@ -170,9 +132,140 @@ public class Automaton {
 		
 	}
 	
+	public State getStateFromName(int name) {
+		for (State s : states) {
+			if (s.getName() == name)
+				return s;
+		}
+		return null;
+	}
 	
+	public void complementaryAutomaton() {
+		
+		
+		
+		
+		
+		// Tester completion et
+		// Si l'automate est pas complet
+		// Appeler la fonction completion
+		
+		
+		
+		
+		
+		for (State S : states) {
+			if (S.isFinal()) {
+				S.setFinal(false);
+				nbrFinalStates --;
+			} else {
+				S.setFinal(true);
+				nbrFinalStates ++;
+			}
+		}
+	}
 	
+	public boolean isStandard() {
+		if (nbrInitialStates > 1)
+			return false;			
+		else {
+			for (State S : states) {
+				for (Transition T : S.getTransiList()) {
+					if (getStateFromName(T.getArrivalStateName()).isInitial())
+						return false;
+				}
+			}
+		}
+		return true;
+	}
 	
+	public void standardization() {
+		if (!isStandard()) {
+			ArrayList<Transition> listTrans = new ArrayList<Transition>();
+			boolean sFinal = false;
+			for (State S : states) {
+				if (S.isInitial()) {
+					if (S.isFinal()) 
+						sFinal = true;
+					for (Transition T : S.getTransiList()) {
+						listTrans.add(new Transition(T));
+						nbrTransitions ++;
+					}
+					S.setInitial(false);
+					nbrInitialStates --;
+				}
+			}
+			if (sFinal)
+				nbrFinalStates ++;
+			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang, listTrans));
+			nbrInitialStates ++;
+			nbrStates ++;
+		} else
+			System.out.println("L'automate est d�j� standard !");
+	}
+	
+	public void determinization() {
+		HashMap<State, ArrayList<State>> associatedStates = new HashMap<State, ArrayList<State>>();
+		
+		ArrayList<State> stateCollection = new ArrayList<State>();
+		states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
+		nbrStates ++;
+		
+		// We check all initialStates
+		for (State s : states) {
+			if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
+				stateCollection.add(s);
+		}
+		associatedStates.put(states.get(nbrStates-1), stateCollection);
+		
+		// For each state that is key in HashMap (which is supposed to be a new state)
+		for (State s : associatedStates.keySet()) {
+			// For each letter in alphabet
+			for (String c : lettersInLang) {
+				// For each old state associated with the new one
+				stateCollection = new ArrayList<State>();
+				int i = 0;
+				for (State mixedState : associatedStates.get(s)) {
+					// For each transition in this old state
+					for (Transition t : mixedState.getTransiList()) {
+						// If letters are equals, we increment i
+						if (t.getLetter().equals(c))
+							i ++;
+					}
+				}
+				// If there is more than one transition with same letter, we create
+				// a new state and we link it with arrivalStates in these transitions
+				if (i > 1) {
+					states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
+					nbrStates ++;
+					
+					for (State mixedState : associatedStates.get(s)) {
+						for (Transition t : mixedState.getTransiList()) {
+							if (t.getLetter().equals(c))
+								stateCollection.add(getStateFromName(t.getArrivalStateName()));
+						}
+					}
+					associatedStates.put(states.get(nbrStates-1), stateCollection);
+				// Else, we simply add the arrivalState to associatedStates (because arrivalState is already
+				// created and doesn't need to be mixed with other state)
+				} else {
+					for (State mixedState : associatedStates.get(s)) {
+						for (Transition t : mixedState.getTransiList()) {
+							if (t.getLetter().equals(c)) {
+								stateCollection.add(getStateFromName(t.getArrivalStateName()));
+								// If the new state is not already in the associatedStates
+								// (make the "while" stop when there is no new state in associatedStates)
+								if (!associatedStates.containsKey(getStateFromName(t.getArrivalStateName())))
+									associatedStates.put(getStateFromName(t.getArrivalStateName()), stateCollection);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+    
 	public void completion() { 
 		nbrStates ++;
 		states.add(new State(nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
@@ -196,54 +289,10 @@ public class Automaton {
 				}
 				
 				for (String x : copyAlpha) {
-					s.getTransiList().add(new Transition(x, sTrash));
+					s.getTransiList().add(new Transition(x, sTrash.getName()));
 				}
 			}
 		}
 	}
 	
-			
-			
-	
-	/*public Automaton miniminsation() {
-		
-		ArrayList<ArrayList<State>> firstLibrary = new ArrayList<ArrayList<State>>(nbrStates); // faire un array liste 2D
-		int i,j = 0;
-		
-		for (State s : states ) {
-			for (Transition t : s.getTransiList()) {
-				
-				if (t.getArrivalState().isFinal()){
-					firstLibrary.get(i).get(j).add(666);
-				} else {
-					firstLibrary.get(i).get(j).add(667);
-				}
-				i = i % nbrStates;
-				j = j % 2;
-			}
-		}
-		
-		
-		System.out.println("\n\n\n\n");
-		for (State s : firstLibrary ) {
-			System.out.println(s.getName());
-		}
-		System.out.println("\n\n\n\n");
-		return null;
-		
-	}
-	
-	
-	
-	
-	public void display2Dtab(ArrayList<ArrayList<State>> firstLibrary) {
-
-		for (int i = 0; i <firstLibrary.size(); i++) { 
-	        for (int j = 0; j <firstLibrary.get(i).size(); j++) { 
-	              System.out.print(firstLibrary.get(i).get(j) + " "); 
-	         } 
-	      System.out.println(); 
-	     } 
-	}*/
-
 }

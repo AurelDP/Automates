@@ -24,24 +24,56 @@ public class Launcher {
 				sc = new Scanner(System.in);
 				entry = sc.nextInt();
 			} while (entry <= 0 || entry > namesTxtFiles.size());
-			
-			sc.close();
 	
 			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 			
 			// We recover the chosen automaton and we write it in the program memory
 			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
+			System.out.println("\n\nAUTOMATE DE BASE");
 			AF.display();
-			Automaton AC = new Automaton(AF);
-			System.out.println("\n\n\n COMPLETION :\n\n\n");
 			
-			AC.completion();
+			Automaton AFstd = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE STANDARD");
+			AFstd.standardization();
+			AFstd.display();
 			
-			AC.display();
+			Automaton AFcomp = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE COMPLEMENTAIRE");
+			AFcomp.complementaryAutomaton();
+			AFcomp.display();
 			
+			Automaton AFC = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE COMPLET");
+			AFC.completion();
+			AFC.display();
 			
-			//System.out.printf("\n\n transition : " + AF.miniminsation() );
+			/*
+			Automaton AFD = new Automaton(AF);
+			System.out.println("\n\nAUTOMATE DETERMINISE");
+			AFD.determinization();
+			AFD.display();
+			*/
 			
+			/*
+			String[] words = readWords(sc);
+			if (words.length != 0) {
+				System.out.println("Mots entrés :");
+				for (String w : words) {
+					if (w.matches("[*]+"))
+						System.out.print("Mot vide");
+					else
+						System.out.print(w);
+					if (recognizedWord(AF, w))
+						System.out.println(" : Reconnu");
+					else
+						System.out.println(" : Non reconnu");
+				}
+			} else {
+				System.out.println("Aucun mot n'a été entré...");
+			}
+			*/
+			
+						
 			/*
 			 * L'automate généré dans le fichier txt est stocké dans la variable "automaton"
 			 * Vous pouvez faire vos tests à partir de cet objet directement (vous pouvez ajouter un .txt "test" dans le dossier "automates"
@@ -51,6 +83,7 @@ public class Launcher {
 			 * Les méthodes seront écrites dans les classes correspondantes
 			 */
 			
+			sc.close();
 			
 		} else {
 			System.out.println("Le dossier des automates est vide !");
@@ -135,15 +168,7 @@ public class Launcher {
 						// The first part of the split line is converted to an int for the name of the pre-transition state
 						int name = Integer.parseInt(part[0]);
 						// The third part corresponds to the arrival state
-						int a = Integer.parseInt(part[2]);
-						State arrival = null;
-						// The real arrival state is recovered thanks to the name recovered before
-						for (State s : states) {
-							if (s.getName() == a) {
-								arrival = s;
-								break;
-							}
-						}
+						int arrival = Integer.parseInt(part[2]);
 						// Then we modify this state to add a transition, using the recovered information
 						for (State s : states) {
 							if (s.getName() == name) {
@@ -181,6 +206,63 @@ public class Launcher {
 			}
 		}
 		return names;
+	}
+	
+	private static String[] readWords(Scanner sc) {
+		String line;
+		String[] words;
+		do {
+			System.out.print("\nListe des mots à reconnaître (séparés par un espace).\n"
+					+ "Le mot vide est noté \"*\".\n"
+					+ "Votre liste : ");
+			sc.nextLine(); // This line is used to empty the buffer
+			line = sc.nextLine();
+		} while (line.equals(""));
+		words = line.split("\\s+");
+		return words;
+	}
+	
+	private static boolean recognizedWord(Automaton a, String word) {
+		State currentState = null;
+		
+		// Recover of the initial state
+		for (State s : a.getStates()) {
+			if (s.isInitial()) {
+				currentState = s;
+				break;
+			}
+		}
+		
+		// If there is no initial state, then no words can be recognized
+		if (currentState == null)
+			return false;
+		
+		// Recognition of void word
+		if (word.matches("[*]+") && currentState.isInitial() && currentState.isFinal())
+			return true;
+		
+		// If void symbol is in word, we remove it
+		word.replace("*", "");
+		
+		// Convert word into array of chars
+		char[] chars = word.toCharArray();
+		
+		// Recognition of other words
+		for (char c : chars) {
+			boolean foundLetter = false;
+			for (Transition t : currentState.getTransiList()) {
+				if (c == t.getLetter().charAt(0)) {
+					foundLetter = true;
+					currentState = a.getStateFromName(t.getArrivalStateName());
+					break;
+				}
+			}
+			if (!foundLetter)
+				return false;
+		}
+		if (currentState.isFinal())
+			return true;
+		return false;
 	}
 
 }

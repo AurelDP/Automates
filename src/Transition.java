@@ -1,37 +1,32 @@
 
 public class Transition {
 	private String letter;
-	private State arrivalState;
+	private int nameArrivalState;
 	
-	public Transition(String letter, State arrivalState) {
+	public Transition(String letter, int nameArrivalState) {
 		this.letter = letter;
-		this.arrivalState = arrivalState;
+		this.nameArrivalState = nameArrivalState;
 	}
 	
 	public Transition(Transition transition) {
 		this.letter = new String(transition.letter);
-		// arrivalState is defined in "Automaton" class, after all new states are created
-		this.arrivalState = null;
+		this.nameArrivalState = transition.nameArrivalState;
 	}
 	
 	public String getLetter() {
 		return letter;
 	}
-	
-	public State getArrivalState() {
-		return arrivalState;
-	}
-	
+		
 	public int getArrivalStateName() {
-		return arrivalState.getName();
+		return nameArrivalState;
 	}
 	
 	public void setLetter(String s) {
 		this.letter = s;
 	}
 	
-	public void setArrivalState(State state) {
-		this.arrivalState = state;
+	public void setArrivalStateName(int stateName) {
+		this.nameArrivalState = stateName;
 	}
 	
 }
