@@ -1,8 +1,7 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Iterator;
-import java.util.Map;
 
 public class Automaton {
 	private int nbrLettersInLang;
@@ -141,7 +140,7 @@ public class Automaton {
 	}
     
 	public boolean isDeterminist() {	
-		if (nbrInitialStates >= 2)
+		if (nbrInitialStates > 1)
 			return false;
 		else {
 			for (State s : states) {
@@ -160,8 +159,8 @@ public class Automaton {
 	}
     
 	public boolean isComplete() {
-		if (nbrInitialStates > 1)
-			return false;
+		if (nbrTransitions == 0)
+			return true;
 		else {
 			for (State s : states) {
 				for (String alpha : lettersInLang) {
@@ -239,72 +238,127 @@ public class Automaton {
 			nbrInitialStates ++;
 			nbrStates ++;
 		} else
-			System.out.println("L'automate est dï¿½jï¿½ standard !");
+			System.out.println("L'automate est déjà standard !");
+	}
+	
+	// This method is called when the state is supposed to be not in any transition
+	// (especially called in determinization)
+	private void removeStateFromName(int name) {
+		int i = 0;
+		for (State s : states) {
+			if (s.getName() == name) {
+				states.remove(i);
+				nbrStates --;
+				break;
+			}
+			i ++;
+		}
+	}
+	
+	// Method used in determinization to replace names of states from 0
+	private void replaceNamesStates() {
+		int minus = states.get(0).getName();
+		for (State s : states) {
+			s.setName(s.getName()-minus);
+			for (Transition t : s.getTransiList()) {
+				t.setArrivalStateName(t.getArrivalStateName()-minus);
+			}
+		}
 	}
 	
 	public void determinization() {
 		HashMap<State, ArrayList<State>> associatedStates = new HashMap<State, ArrayList<State>>();
+		ArrayList<State> statesToDo = new ArrayList<State>();
+		
+		// We reset numbers of initialStates, finalStates and transitions
+		nbrInitialStates = 0;
+		nbrFinalStates = 0;
+		nbrTransitions = 0;
 		
 		ArrayList<State> stateCollection = new ArrayList<State>();
 		states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
 		nbrStates ++;
 		
-		// We check all initialStates
+		// We check all initialStates and add them in stateCollection
 		for (State s : states) {
 			if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
 				stateCollection.add(s);
 		}
+		// We sort stateCollection by state name
+		stateCollection.sort(Comparator.comparing(State::getName));
+		// We put new state as key and stateCollection as value in associatedStates
 		associatedStates.put(states.get(nbrStates-1), stateCollection);
+		// We add the new state in statesToDo list
+		statesToDo.add(states.get(nbrStates-1));
+		nbrInitialStates ++;
 		
-		// For each state that is key in HashMap (which is supposed to be a new state)
-		for (State s : associatedStates.keySet()) {
-			// For each letter in alphabet
-			for (String c : lettersInLang) {
-				// For each old state associated with the new one
+		// While there are states in statesToDo list, we recover the first state of the list
+		while (statesToDo.size() != 0) {
+			State currentMergedState = statesToDo.get(0);
+			
+			// For each letter of the alphabet
+			for (String alpha : lettersInLang) {
+				// We reset the stateCollection
 				stateCollection = new ArrayList<State>();
-				int i = 0;
-				for (State mixedState : associatedStates.get(s)) {
-					// For each transition in this old state
-					for (Transition t : mixedState.getTransiList()) {
-						// If letters are equals, we increment i
-						if (t.getLetter().equals(c))
-							i ++;
+				
+				// And for each old state of the new merged state
+				for (State stateBeforeMerge : associatedStates.get(currentMergedState)) {
+					
+					// If the letter of the transition is the same than alpha, we add the arrivalState to the stateCollection list
+					for (Transition t : stateBeforeMerge.getTransiList()) {
+						if (alpha.equals(t.getLetter()))
+							stateCollection.add(getStateFromName(t.getArrivalStateName()));
 					}
 				}
-				// If there is more than one transition with same letter, we create
-				// a new state and we link it with arrivalStates in these transitions
-				if (i > 1) {
-					states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
-					nbrStates ++;
-					
-					for (State mixedState : associatedStates.get(s)) {
-						for (Transition t : mixedState.getTransiList()) {
-							if (t.getLetter().equals(c))
-								stateCollection.add(getStateFromName(t.getArrivalStateName()));
-						}
+				
+				// We sort stateCollection by state name (it allows us to compare easily stateCollection with
+				// values in associatedStates HashMap
+				stateCollection.sort(Comparator.comparing(State::getName));
+				
+				// If stateCollection is not already in values of HashMap, then we can add a new merged state and put it with stateCollection in associatedStates
+				boolean isAlreadyIn = false;
+				for (State s : associatedStates.keySet()) {
+					if (associatedStates.get(s).equals(stateCollection))
+						isAlreadyIn = true;
+				}
+				
+				// If there is something in stateCollection, we create a new state that is the merge of states in stateCollection
+				if (stateCollection.size() > 0) {
+					if (!isAlreadyIn) {
+						states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
+						nbrStates ++;
+						associatedStates.put(states.get(nbrStates-1), stateCollection);
+						// We also add this new merged state in statesToDo
+						statesToDo.add(states.get(nbrStates-1));
 					}
-					associatedStates.put(states.get(nbrStates-1), stateCollection);
-				// Else, we simply add the arrivalState to associatedStates (because arrivalState is already
-				// created and doesn't need to be mixed with other state)
-				} else {
-					for (State mixedState : associatedStates.get(s)) {
-						for (Transition t : mixedState.getTransiList()) {
-							if (t.getLetter().equals(c)) {
-								stateCollection.add(getStateFromName(t.getArrivalStateName()));
-								// If the new state is not already in the associatedStates
-								// (make the "while" stop when there is no new state in associatedStates)
-								if (!associatedStates.containsKey(getStateFromName(t.getArrivalStateName())))
-									associatedStates.put(getStateFromName(t.getArrivalStateName()), stateCollection);
-								break;
-							}
-						}
-					}
+					// We create the new transition of mergedState with letter alpha to new state created
+					currentMergedState.getTransiList().add(new Transition(alpha, states.get(nbrStates-1).getName()));
+					currentMergedState.incrementNbrTransi();
+					nbrTransitions ++;
 				}
 			}
+			
+			// We can finally remove the first index of statesToDo
+			statesToDo.remove(0);
 		}
+		
+		// We put final states in associatedStates
+		for (State mergedState : associatedStates.keySet()) {
+			for (State s : associatedStates.get(mergedState)) {
+				if (s.isFinal()) {
+					mergedState.setFinal(true);
+					nbrFinalStates ++;
+				}
+				// Then, we remove all value states in the automaton to only keep key states
+				this.removeStateFromName(s.getName());
+			}
+		}
+		
+		// We reset names of the states (and transitions) to start from 0 (0, 1 ,2 ... instead of 5, 6, 7 ...)
+		this.replaceNamesStates();
 	}
     
-	public void completion() { 
+	public void completion() {
 		nbrStates ++;
 		states.add(new State(nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
 		State sTrash = states.get(nbrStates-1);

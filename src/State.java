@@ -30,6 +30,10 @@ public class State {
 		return nameState;
 	}
 	
+	public void setName(int name) {
+		this.nameState = name;
+	}
+	
 	public boolean isFinal() {
 		return isFinal;
 	}
