@@ -141,7 +141,19 @@ public class Automaton {
 	}
 	
 	public void complementaryAutomaton() {
-		// faire complet 
+		
+		
+		
+		
+		
+		// Tester completion et
+		// Si l'automate est pas complet
+		// Appeler la fonction completion
+		
+		
+		
+		
+		
 		for (State S : states) {
 			if (S.isFinal()) {
 				S.setFinal(false);
@@ -277,7 +289,7 @@ public class Automaton {
 				}
 				
 				for (String x : copyAlpha) {
-					s.getTransiList().add(new Transition(x, sTrash));
+					s.getTransiList().add(new Transition(x, sTrash.getName()));
 				}
 			}
 		}
