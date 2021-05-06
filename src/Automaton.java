@@ -139,6 +139,25 @@ public class Automaton {
 		}
 		return null;
 	}
+    
+	public boolean isDeterminist() {	
+		if (nbrInitialStates >= 2)
+			return false;
+		else {
+			for (State s : states) {
+				for (String alpha : lettersInLang) {
+					int counter = 0;
+					for (Transition t : s.getTransiList()) {
+						if (t.getLetter().equals(alpha))
+							counter++;
+						if (counter == 2)
+							return false;
+					}
+				}	
+			}
+		}
+		return true;
+	}
 	
 	public void complementaryAutomaton() {
 		
@@ -164,6 +183,14 @@ public class Automaton {
 			}
 		}
 	}
+    
+	public boolean isFull(Automaton a) {
+		
+		if (a.isDeterminist() && a.isAsynchrone() && (nbrLettersInLang * nbrStates == nbrTransitions))
+			return true;
+		else
+			return false;
+	}
 	
 	public boolean isStandard() {
 		if (nbrInitialStates > 1)
@@ -175,6 +202,15 @@ public class Automaton {
 						return false;
 				}
 			}
+		}
+		return true;
+	}
+    
+	public boolean isAsynchrone() {
+		String empty = "*";
+		for (String alpha : lettersInLang) {
+			if (alpha.equals(empty))
+				return false;
 		}
 		return true;
 	}
