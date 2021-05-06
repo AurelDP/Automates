@@ -129,6 +129,7 @@ public class Automaton {
 	
 	public ArrayList<State> getStates() {
 		return states;
+		
 	}
 	
 	public State getStateFromName(int name) {
@@ -188,7 +189,7 @@ public class Automaton {
 			nbrInitialStates ++;
 			nbrStates ++;
 		} else
-			System.out.println("L'automate est déjà standard !");
+			System.out.println("L'automate est dï¿½jï¿½ standard !");
 	}
 	
 	public void determinization() {
@@ -252,4 +253,34 @@ public class Automaton {
 			}
 		}
 	}
+    
+	public void completion() { 
+		nbrStates ++;
+		states.add(new State(nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
+		State sTrash = states.get(nbrStates-1);
+		for (int i = 0 ; i<nbrLettersInLang ; i++ ) {
+			sTrash.getTransiList().add(new Transition(lettersInLang.get(i), sTrash.getName()));
+		}
+		
+		for (State s : states) {
+			ArrayList<String> copyAlpha = new ArrayList<String>(lettersInLang);
+			if (s.getNbrTransitions() != nbrLettersInLang) {
+				for (Transition t : s.getTransiList()) {
+					Iterator<String> it  = copyAlpha.iterator();
+					
+					while (it.hasNext()) { // loop the list copyAlpha and remove during it
+						String i = it.next();
+						if (t.getLetter().equals(i)) {
+							it.remove();
+						}
+					}
+				}
+				
+				for (String x : copyAlpha) {
+					s.getTransiList().add(new Transition(x, sTrash));
+				}
+			}
+		}
+	}
+	
 }
