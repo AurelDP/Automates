@@ -170,7 +170,50 @@ public class Automaton {
 		
 	}
 	
+	public boolean isDeterminist () {	
+		if (nbrInitialStates >= 2) {
+			return false;
+		}else {
+			
+		
+			for (State s : states) {
+				
+				for ( String alpha : lettersInLang) {
+					int counter = 0;
+					for (Transition t : s.getTransiList()) {
+						if (t.getLetter().equals(alpha)){
+							counter++;
+						}
+						if (counter == 2) {
+							return false;
+						}
+					}
+				}	
+			}
+		}
+		
+		return true;
+	}
 	
+	public boolean isFull (Automaton AD) {
+		
+		if (AD.isDeterminist() && AD.isAsynchrone() && nbrLettersInLang * nbrStates == nbrTransitions) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+	
+	public boolean isAsynchrone() {
+		String empty = "*";
+		for ( String alpha : lettersInLang) {
+			if (alpha.equals(empty)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	
 	public void completion() { 
