@@ -229,26 +229,15 @@ public class Automaton {
 		HashMap<State, ArrayList<State>> associatedStates = new HashMap<State, ArrayList<State>>();
 		
 		ArrayList<State> stateCollection = new ArrayList<State>();
-		if (nbrInitialStates > 1) {
-			states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
-			nbrStates ++;
-			
-			// We check all initialStates
-			for (State s : states) {
-				if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
-					stateCollection.add(s);
-			}
-			associatedStates.put(states.get(nbrStates-1), stateCollection);
-			
-		} else {
-			for (State s : states) {
-				if (s.isInitial()) {
-					stateCollection.add(s);
-					associatedStates.put(s, stateCollection);
-					break;
-				}
-			}
+		states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
+		nbrStates ++;
+		
+		// We check all initialStates
+		for (State s : states) {
+			if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
+				stateCollection.add(s);
 		}
+		associatedStates.put(states.get(nbrStates-1), stateCollection);
 		
 		// For each state that is key in HashMap (which is supposed to be a new state)
 		for (State s : associatedStates.keySet()) {
