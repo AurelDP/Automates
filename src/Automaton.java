@@ -158,38 +158,24 @@ public class Automaton {
 		}
 		return true;
 	}
-	
-	public void complementaryAutomaton() {
-		
-		
-		
-		
-		
-		// Tester completion et
-		// Si l'automate est pas complet
-		// Appeler la fonction completion
-		
-		
-		
-		
-		
-		for (State S : states) {
-			if (S.isFinal()) {
-				S.setFinal(false);
-				nbrFinalStates --;
-			} else {
-				S.setFinal(true);
-				nbrFinalStates ++;
+    
+	public boolean isComplete() {
+		if (nbrInitialStates > 1)
+			return false;
+		else {
+			for (State s : states) {
+				for (String alpha : lettersInLang) {
+					boolean alphaUsed = false;
+					for (Transition t : s.getTransiList()) {
+						if (t.getLetter().equals(alpha))
+							alphaUsed = true;
+					}
+					if (!alphaUsed)
+						return false;
+				}
 			}
 		}
-	}
-    
-	public boolean isFull(Automaton a) {
-		
-		if (a.isDeterminist() && a.isAsynchrone() && (nbrLettersInLang * nbrStates == nbrTransitions))
-			return true;
-		else
-			return false;
+		return true;
 	}
 	
 	public boolean isStandard() {
@@ -213,6 +199,22 @@ public class Automaton {
 				return false;
 		}
 		return true;
+	}
+	
+	public void complementaryAutomaton() {
+		// If the automaton is not complete, we have to complete it before make it's complementary
+		if (!this.isComplete())
+			this.completion();
+		// Then we change finals states to non-finals and non-finals ones to finals
+		for (State S : states) {
+			if (S.isFinal()) {
+				S.setFinal(false);
+				nbrFinalStates --;
+			} else {
+				S.setFinal(true);
+				nbrFinalStates ++;
+			}
+		}
 	}
 	
 	public void standardization() {
