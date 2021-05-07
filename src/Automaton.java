@@ -126,8 +126,8 @@ public class Automaton {
 		
 	}
 	
-	public void displayDeterministLinks(HashMap<Integer, ArrayList<Integer>> links) {
-		System.out.println("Correspondance des états (après et avant traitement) :");
+	public void displayDeterministOrMinimalistLinks(HashMap<Integer, ArrayList<Integer>> links) {
+		System.out.println("\nCorrespondance des états (après et avant traitement) :");
 		for (Integer i : links.keySet()) {
 			System.out.println(i + " = " + links.get(i));
 		}
@@ -199,12 +199,13 @@ public class Automaton {
 	}
     
 	public boolean isAsynchrone() {
-		String empty = "*";
-		for (String alpha : lettersInLang) {
-			if (alpha.equals(empty))
-				return false;
+		for (State s : states) {
+			for (Transition t : s.getTransiList()) {
+				if (t.getLetter().equals("*"))
+					return true;
+			}
 		}
-		return true;
+		return false;
 	}
 	
 	public void complementaryAutomaton() {
@@ -262,7 +263,7 @@ public class Automaton {
 		}
 	}
 	
-	public ArrayList<Integer> nameListFromStateList(ArrayList<State> states) {
+	private ArrayList<Integer> nameListFromStateList(ArrayList<State> states) {
 		ArrayList<Integer> names = new ArrayList<Integer>();
 		for (State s : states) {
 			names.add(s.getName());
@@ -393,4 +394,192 @@ public class Automaton {
 		}
 	}
 	
+	private ArrayList<State> getTerminalStates() {
+		ArrayList<State> terminalStates = new ArrayList<State>();
+		
+		for (State s : states) {
+			if (s.isFinal())
+				terminalStates.add(s);
+		}
+		
+		return terminalStates;
+	}
+	
+	private ArrayList<State> getNonTerminalStates() {
+		ArrayList<State> nonTerminalStates = new ArrayList<State>();
+		
+		for (State s : states) {
+			if (!s.isFinal())
+				nonTerminalStates.add(s);
+		}
+		
+		return nonTerminalStates;
+	}
+	
+	private int getMaxStateName() {
+		int maxName = 0;
+		
+		for (State s : states) {
+			if (s.getName() > maxName)
+				maxName = s.getName();
+		}
+		
+		return maxName;
+	}
+	
+	public HashMap<Integer, ArrayList<Integer>> minimization() {
+		// returnParts is List in List in List because it will return all parts (that are List of List)
+		ArrayList<ArrayList<State>> partsBis = new ArrayList<ArrayList<State>>();
+		
+		partsBis.add(getTerminalStates());
+		partsBis.add(getNonTerminalStates());
+		
+		ArrayList<ArrayList<State>> parts = new ArrayList<ArrayList<State>>();
+		
+		// We reset numbers of initialStates, finalStates and transitions
+		nbrInitialStates = 0;
+		nbrFinalStates = 0;
+		nbrTransitions = 0;
+		
+		int increment = 1;
+		System.out.println("\nDétail des partitions :");
+		
+		do {
+			// We copy partsBis in parts
+			parts = new ArrayList<ArrayList<State>>(partsBis);
+			// We reset partsBis (it will be the next parts)
+			partsBis = new ArrayList<ArrayList<State>>();
+			
+			System.out.print(increment + ") ");
+			for (ArrayList<State> stateListForDisplay : parts) {
+				ArrayList<Integer> integerPart = nameListFromStateList(stateListForDisplay);
+				System.out.print(integerPart + " ");
+			}
+			System.out.print("\n");
+			
+			for (ArrayList<State> states : parts) {
+				HashMap<State, ArrayList<Integer>> lines = new HashMap<State, ArrayList<Integer>>();
+				
+				for (State state : states) {
+					ArrayList<Integer> integerList = new ArrayList<Integer>();
+					
+					for (String alpha : lettersInLang) {
+						Integer indexArrivalList = 0;
+						
+						for (Transition t : state.getTransiList()) {
+							
+							if (t.getLetter().equals(alpha)) {
+								
+								for (ArrayList<State> statesOfParts : parts) {
+									if (statesOfParts.contains(getStateFromName(t.getArrivalStateName()))) {
+										indexArrivalList = parts.indexOf(statesOfParts);
+										break;
+									}
+								}
+								break;
+							}
+							
+						}
+						integerList.add(indexArrivalList);
+					}
+					lines.put(state, integerList);
+				}
+				
+				while (lines.size() > 0) {
+					
+					ArrayList<Integer> tempIndexList = new ArrayList<Integer>();
+					tempIndexList = lines.get(lines.keySet().toArray()[0]);
+					
+					ArrayList<State> tempState = new ArrayList<State>();
+					ArrayList<State> tempStateToRemove = new ArrayList<State>();
+					
+					for (State s : lines.keySet()) {
+						if (lines.get(s).equals(tempIndexList) && s != lines.keySet().toArray()[0]) {
+							tempState.add(s);
+							tempStateToRemove.add(s);
+						}
+					}
+					
+					for (State s : tempStateToRemove) {
+						lines.remove(s);
+					}
+					
+					tempState.add((State) lines.keySet().toArray()[0]);
+					lines.remove(lines.keySet().toArray()[0]);
+					partsBis.add(tempState);
+				}
+			}
+			
+			increment ++;
+			
+		} while (!parts.equals(partsBis));
+		
+		HashMap<Integer, ArrayList<Integer>> linkedStates = new HashMap<Integer, ArrayList<Integer>>();
+		
+		for (ArrayList<State> statesList : partsBis) {
+			ArrayList<Integer> namesOfStates = nameListFromStateList(statesList);
+			boolean isInitial = false;
+			boolean isFinal = false;
+			
+			for (State s : statesList) {
+				if (s.isFinal()) {
+					isFinal = true;
+					nbrFinalStates ++;
+					break;
+				}
+			}
+			
+			for (State s : statesList) {
+				if (s.isInitial()) {
+					isInitial = true;
+					nbrInitialStates ++;
+					break;
+				}
+			}
+			
+			// The automaton is complete so nbrTransitions = nbrLettersInLang for each state
+			states.add(new State(getMaxStateName()+1, isFinal, isInitial, nbrLettersInLang, new ArrayList<Transition>()));
+			nbrStates ++;
+			
+			linkedStates.put(getMaxStateName(), namesOfStates);
+		}
+		
+		for (State s : states) {
+			for (Integer i : linkedStates.keySet()) {
+				
+				if (s.getName() == i) {
+					int value = (int) linkedStates.get(i).toArray()[0];
+					State oldState = getStateFromName(value);
+					
+					for (String alpha : lettersInLang) {
+						for (Transition t : oldState.getTransiList()) {
+							
+							if (t.getLetter().equals(alpha)) {
+								
+								for (Integer key : linkedStates.keySet()) {
+									if (linkedStates.get(key).contains(t.getArrivalStateName())) {
+										s.setTransi(alpha, key);
+										nbrTransitions ++;
+										break;
+									}
+								}
+								
+							}
+							
+						}
+					}
+					
+				}
+				
+			}
+		}
+		
+		for (ArrayList<State> sList : partsBis) {
+			for (State s : sList) {
+				removeStateFromName(s.getName());
+			}
+		}
+				
+		return linkedStates;
+	}
 }
