@@ -262,17 +262,6 @@ public class Automaton {
 		}
 	}
 	
-	// Method used in determinization to replace names of states from 0
-	private void replaceNamesStates() {
-		int minus = states.get(0).getName();
-		for (State s : states) {
-			s.setName(s.getName()-minus);
-			for (Transition t : s.getTransiList()) {
-				t.setArrivalStateName(t.getArrivalStateName()-minus);
-			}
-		}
-	}
-	
 	public ArrayList<Integer> nameListFromStateList(ArrayList<State> states) {
 		ArrayList<Integer> names = new ArrayList<Integer>();
 		for (State s : states) {
