@@ -8,90 +8,125 @@ public class Launcher {
 	public static void main(String[] args) {
 		int entry;
 		Scanner sc = null;
+		boolean run = true;
 		
 		// We get the name of all the files contained in the "automates" folder
 		ArrayList<String> namesTxtFiles = findNamesInFile(new File("./automates"));
 				
 		if (namesTxtFiles.size() != 0) {
-		
-			System.out.print("Choisissez l'automate à traiter parmi la liste suivante :\n");
 			
-			// We display all the file names and ask the user to choose an automaton from the list
-			for (int u = 1; u <= namesTxtFiles.size(); u++)
-				System.out.println(u + " - " + namesTxtFiles.get(u - 1));
-	
 			do {
-				System.out.print("\nVotre choix (entrez le numéro de l'automate) : ");
-				sc = new Scanner(System.in);
-				entry = sc.nextInt();
-			} while (entry <= 0 || entry > namesTxtFiles.size());
-	
-			System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
-			
-			// We recover the chosen automaton and we write it in the program memory
-			Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
-			System.out.println("\n\n--------------------------\n"
-					+ "AUTOMATE DE BASE");
-			AF.display();
-			
-			if (AF.isStandard())
+		
+				System.out.print("\n\nChoisissez l'automate à traiter parmi la liste suivante :\n");
+				
+				// We display all the file names and ask the user to choose an automaton from the list
+				for (int u = 1; u <= namesTxtFiles.size(); u++)
+					System.out.println(u + " - " + namesTxtFiles.get(u - 1));
+		
+				do {
+					System.out.print("\nVotre choix (entrez le numéro de l'automate) : ");
+					sc = new Scanner(System.in);
+					entry = sc.nextInt();
+				} while (entry <= 0 || entry > namesTxtFiles.size());
+		
+				System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
+				
+				
+				// We recover the chosen automaton and we write it in the program memory
+				Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
 				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE DEJA STANDARD");
-			else {
-				Automaton AFstd = new Automaton(AF);
-				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE STANDARD");
-				AFstd.standardization();
-				AFstd.display();
-			}
-			
-			Automaton AFcomp = new Automaton(AF);
-			System.out.println("\n\n--------------------------\n"
-					+ "AUTOMATE COMPLEMENTAIRE");
-			AFcomp.complementaryAutomaton();
-			AFcomp.display();
-			
-			if (AF.isComplete())
-				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE DEJA COMPLET");
-			else {
-				Automaton AFC = new Automaton(AF);
-				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE COMPLET");
-				AFC.completion();
-				AFC.display();
-			}
-			
-			if (AF.isDeterminist())
-				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE DEJA DETERMINISTE");
-			else {
-				Automaton AFD = new Automaton(AF);
-				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE DETERMINISE");
-				HashMap<Integer, ArrayList<Integer>> links = AFD.determinization();
-				AFD.display();
-				AFD.displayDeterministLinks(links);
-			}
-			
-			/*
-			String[] words = readWords(sc);
-			if (words.length != 0) {
-				System.out.println("Mots entrés :");
-				for (String w : words) {
-					if (w.matches("[*]+"))
-						System.out.print("Mot vide");
-					else
-						System.out.print(w);
-					if (recognizedWord(AF, w))
-						System.out.println(" : Reconnu");
-					else
-						System.out.println(" : Non reconnu");
+						+ "AUTOMATE DE BASE");
+				AF.display();
+				
+				
+				Automaton AFDC = null;
+				if (AF.isAsynchrone())
+					System.out.println("\n\nL'automate est asynchrone et ne pourra pas être traité.");
+				else {
+					HashMap<Integer, ArrayList<Integer>> links = null;
+					
+					AFDC = new Automaton(AF);
+					if (AF.isDeterminist()) {
+						if (!AF.isComplete()) {
+							AFDC = new Automaton(AF);
+							AFDC.completion();
+						}
+					} else {
+						if (!AF.isComplete()) {
+							AFDC = new Automaton(AF);
+							AFDC.completion();
+							links = AFDC.determinization();
+						}
+					}
+					System.out.println("\n\n--------------------------------------\n"
+							+ "AUTOMATE DETERMINISTE COMPLET");
+					AFDC.display();
+					if (links != null)
+						AFDC.displayDeterministOrMinimalistLinks(links);
 				}
-			} else {
-				System.out.println("Aucun mot n'a été entré...");
-			}
-			*/
+				
+				
+				Automaton AFDCM = new Automaton(AFDC);
+				System.out.println("\n\n--------------------------\n"
+						+ "AUTOMATE PRE-MINIMALISATION");
+				AFDCM.display();
+				System.out.println("\nAUTOMATE MINIMAL");
+				HashMap<Integer, ArrayList<Integer>> links = AFDCM.minimization();
+				AFDCM.display();
+				AFDCM.displayDeterministOrMinimalistLinks(links);
+				
+				
+				Automaton AFcomp = new Automaton(AFDCM);
+				System.out.println("\n\n--------------------------\n"
+						+ "AUTOMATE COMPLEMENTAIRE");
+				AFcomp.complementaryAutomaton();
+				AFcomp.display();
+				
+				
+				
+				String[] words = readWords(sc);
+				if (words.length != 0) {
+					System.out.println("Mots entrés :");
+					for (String w : words) {
+						if (w.matches("[*]+"))
+							System.out.print("Mot vide");
+						else
+							System.out.print(w);
+						if (recognizedWord(AFcomp, w))
+							System.out.println(" : Reconnu");
+						else
+							System.out.println(" : Non reconnu");
+					}
+				} else {
+					System.out.println("Aucun mot n'a été entré...");
+				}
+				
+				
+				
+				if (AF.isStandard())
+					System.out.println("\n\n--------------------------\n"
+							+ "AUTOMATE DEJA STANDARD");
+				else {
+					Automaton AFstd = new Automaton(AF);
+					System.out.println("\n\n--------------------------\n"
+							+ "AUTOMATE STANDARD");
+					AFstd.standardization();
+					AFstd.display();
+				}				
+				
+				System.out.print("\n\nQue voulez-vous faire :\n"
+						+ "1) Choisir un autre automate\n"
+						+ "2) Quitter le programme\n");	
+				do {
+					System.out.print("\nVotre choix (entrez le numéro du choix) : ");
+					sc = new Scanner(System.in);
+					entry = sc.nextInt();
+				} while (entry < 1 || entry > 2);
+				
+				if (entry == 2)
+					run = false;
+			
+			} while (run);
 			
 			sc.close();
 			
@@ -274,5 +309,5 @@ public class Launcher {
 			return true;
 		return false;
 	}
-
+	
 }
