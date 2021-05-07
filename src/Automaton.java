@@ -127,7 +127,7 @@ public class Automaton {
 	}
 	
 	public void displayDeterministLinks(HashMap<Integer, ArrayList<Integer>> links) {
-		System.out.println("Correspondance des ï¿½tats (aprï¿½s et avant traitement) :");
+		System.out.println("Correspondance des états (après et avant traitement) :");
 		for (Integer i : links.keySet()) {
 			System.out.println(i + " = " + links.get(i));
 		}
@@ -245,7 +245,7 @@ public class Automaton {
 			nbrInitialStates ++;
 			nbrStates ++;
 		} else
-			System.out.println("L'automate est dï¿½jï¿½ standard !");
+			System.out.println("L'automate est déjà standard !");
 	}
 	
 	// This method is called when the state is supposed to be not in any transition
@@ -312,7 +312,7 @@ public class Automaton {
 					
 					// If the letter of the transition is the same than alpha, we add the arrivalState to the stateCollection list
 					for (Transition t : stateBeforeMerge.getTransiList()) {
-						if (alpha.equals(t.getLetter()))
+						if (alpha.equals(t.getLetter()) && !stateCollection.contains(getStateFromName(t.getArrivalStateName())))
 							stateCollection.add(getStateFromName(t.getArrivalStateName()));
 					}
 				}
@@ -352,7 +352,7 @@ public class Automaton {
 		// We put final states in associatedStates
 		for (State mergedState : associatedStates.keySet()) {
 			for (State s : associatedStates.get(mergedState)) {
-				if (s.isFinal()) {
+				if (s.isFinal() && !mergedState.isFinal()) {
 					mergedState.setFinal(true);
 					nbrFinalStates ++;
 				}
