@@ -126,6 +126,13 @@ public class Automaton {
 		
 	}
 	
+	public void displayDeterministLinks(HashMap<Integer, ArrayList<Integer>> links) {
+		System.out.println("Correspondance des ï¿½tats (aprï¿½s et avant traitement) :");
+		for (Integer i : links.keySet()) {
+			System.out.println(i + " = " + links.get(i));
+		}
+	}
+	
 	public ArrayList<State> getStates() {
 		return states;
 		
@@ -238,7 +245,7 @@ public class Automaton {
 			nbrInitialStates ++;
 			nbrStates ++;
 		} else
-			System.out.println("L'automate est déjà standard !");
+			System.out.println("L'automate est dï¿½jï¿½ standard !");
 	}
 	
 	// This method is called when the state is supposed to be not in any transition
@@ -266,8 +273,17 @@ public class Automaton {
 		}
 	}
 	
-	public void determinization() {
+	public ArrayList<Integer> nameListFromStateList(ArrayList<State> states) {
+		ArrayList<Integer> names = new ArrayList<Integer>();
+		for (State s : states) {
+			names.add(s.getName());
+		}
+		return names;
+	}
+	
+	public HashMap<Integer, ArrayList<Integer>> determinization() {
 		HashMap<State, ArrayList<State>> associatedStates = new HashMap<State, ArrayList<State>>();
+		HashMap<Integer, ArrayList<Integer>> links = new HashMap<Integer, ArrayList<Integer>>();
 		ArrayList<State> statesToDo = new ArrayList<State>();
 		
 		// We reset numbers of initialStates, finalStates and transitions
@@ -288,6 +304,7 @@ public class Automaton {
 		stateCollection.sort(Comparator.comparing(State::getName));
 		// We put new state as key and stateCollection as value in associatedStates
 		associatedStates.put(states.get(nbrStates-1), stateCollection);
+		links.put(states.get(nbrStates-1).getName(), nameListFromStateList(stateCollection));
 		// We add the new state in statesToDo list
 		statesToDo.add(states.get(nbrStates-1));
 		nbrInitialStates ++;
@@ -328,6 +345,7 @@ public class Automaton {
 						states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
 						nbrStates ++;
 						associatedStates.put(states.get(nbrStates-1), stateCollection);
+						links.put(states.get(nbrStates-1).getName(), nameListFromStateList(stateCollection));
 						// We also add this new merged state in statesToDo
 						statesToDo.add(states.get(nbrStates-1));
 					}
@@ -354,8 +372,7 @@ public class Automaton {
 			}
 		}
 		
-		// We reset names of the states (and transitions) to start from 0 (0, 1 ,2 ... instead of 5, 6, 7 ...)
-		this.replaceNamesStates();
+		return links;
 	}
     
 	public void completion() {
