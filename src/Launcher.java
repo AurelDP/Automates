@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Launcher {
@@ -68,8 +69,9 @@ public class Launcher {
 				Automaton AFD = new Automaton(AF);
 				System.out.println("\n\n--------------------------\n"
 						+ "AUTOMATE DETERMINISE");
-				AFD.determinization();
+				HashMap<Integer, ArrayList<Integer>> links = AFD.determinization();
 				AFD.display();
+				AFD.displayDeterministLinks(links);
 			}
 			
 			/*
