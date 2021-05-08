@@ -24,23 +24,6 @@ L'automate est asynchrone car une transition epsilon a été trouvée !
 
 
 
-
-##########################################
-SYNCHRONE
-
-Affichage de l'automate :
-
-Etat initial : [0]
-Etats finaux : [0,1,3,6]
-Table de transitions :
-          a      b   
-   0      2      3,5   
-   1      2      3   
-   2      3      1   
-   3      -      3   
-   5      -      6   
-   6      -      5   
-
 L'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !
 
 L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
@@ -76,10 +59,10 @@ Table de transitions :
    8      9      10   
    9      11      12   
    10      13      14   
-   11      14      14   
-   12      14      14   
-   13      14      14   
-   14      14      14   
+   11      13      11   
+   12      9      11   
+   13      13      13   
+   14      13      10   
 
 Correspondance des états (après et avant traitement) :
 8 = [0]
@@ -96,25 +79,25 @@ AUTOMATE MINIMAL
 
 Détail des partitions :
 1) [8, 10, 11, 12, 14] [9, 13] 
-2) [8, 10] [11, 12, 14] [9, 13] 
-3) [8] [10] [11, 12, 14] [9, 13] 
+2) [8, 10, 11, 12, 14] [13] [9] 
+3) [8, 12] [10, 11, 14] [13] [9] 
 
 Affichage de l'automate :
 
 Etat initial : [15]
-Etats finaux : [15,16,17]
+Etats finaux : [15,16]
 Table de transitions :
           a      b   
    15      18      16   
-   16      18      17   
+   16      17      16   
    17      17      17   
-   18      17      17   
+   18      16      15   
 
 Correspondance des états (après et avant traitement) :
-16 = [10]
-17 = [11, 12, 14]
-18 = [9, 13]
-15 = [8]
+16 = [10, 11, 14]
+17 = [13]
+18 = [9]
+15 = [8, 12]
 
 
 --------------------------
@@ -123,13 +106,13 @@ AUTOMATE COMPLEMENTAIRE
 Affichage de l'automate :
 
 Etat initial : [15]
-Etat final : [18]
+Etats finaux : [17,18]
 Table de transitions :
           a      b   
    15      18      16   
-   16      18      17   
+   16      17      16   
    17      17      17   
-   18      17      17   
+   18      16      15   
 
 Liste des mots à reconnaître (séparés par un espace).
 Le mot vide est noté "*".
