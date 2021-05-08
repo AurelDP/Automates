@@ -1,0 +1,71 @@
+Automate choisi : B6-38.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etats finaux : [0,1,2,3]
+Table de transitions :
+          a      b   
+   0      1      3   
+   1      1      2   
+   2      3      3   
+   3      3      3   
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etats finaux : [0,1,2,3]
+Table de transitions :
+          a      b   
+   0      1      3   
+   1      1      2   
+   2      3      3   
+   3      3      3   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0, 1, 2, 3] [] 
+2) [0, 1, 2, 3] 
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etat final : [4]
+Table de transitions :
+          a      b   
+   4      4      4   
+
+Correspondance des états (après et avant traitement) :
+4 = [0, 1, 2, 3]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Table de transitions :
+          a      b   
+   4      4      4   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Non reconnu
+Mot vide : Non reconnu
+aaa : Non reconnu
+bab : Non reconnu

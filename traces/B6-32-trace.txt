@@ -1,0 +1,135 @@
+Automate choisi : B6-32.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etat final : [21]
+Table de transitions :
+          a      b      c      *   
+   0      -      -      -      1,10   
+   1      -      -      -      2,6   
+   2      -      -      -      3,5   
+   3      -      4      -      -   
+   4      -      -      -      3,5   
+   5      -      -      -      8   
+   6      7      -      -      -   
+   7      -      -      -      8   
+   8      -      -      9      -   
+   9      -      -      -      21   
+   10      -      -      -      11,15   
+   11      -      -      -      12,14   
+   12      13      -      -      -   
+   13      -      -      -      12,14   
+   14      -      -      -      17   
+   15      -      16      -      -   
+   16      -      -      -      17   
+   17      -      -      -      18,20   
+   18      -      -      19      -   
+   19      -      -      -      18,20   
+   20      -      -      -      21   
+   21      -      -      -      -   
+
+L'automate est asynchrone car une transition epsilon a été trouvée !
+
+
+
+L'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [21]
+Etats finaux : [21,22,23,24,25,28,29]
+Table de transitions :
+          a      b      c   
+   21      22      23      24   
+   22      25      26      24   
+   23      26      27      24   
+   24      26      26      28   
+   25      25      26      28   
+   26      26      26      26   
+   27      26      27      29   
+   28      26      26      28   
+   29      26      26      26   
+
+Correspondance des états (après et avant traitement) :
+21 = [0]
+22 = [7, 13]
+23 = [4, 16]
+24 = [9, 19]
+25 = [13, 20]
+26 = [20]
+27 = [4, 20]
+28 = [19, 20]
+29 = [9, 20]
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [21, 22, 23, 24, 25, 28, 29] [26, 27] 
+2) [22, 25] [21] [23, 24, 28] [29] [27] [26] 
+3) [22, 25] [21] [24, 28] [23] [29] [27] [26] 
+
+Affichage de l'automate :
+
+Etat initial : [31]
+Etats finaux : [30,31,32,33,34]
+Table de transitions :
+          a      b      c   
+   30      30      36      32   
+   31      30      33      32   
+   32      36      36      32   
+   33      36      35      32   
+   34      36      36      36   
+   35      36      35      34   
+   36      36      36      36   
+
+Correspondance des états (après et avant traitement) :
+32 = [24, 28]
+33 = [23]
+34 = [29]
+35 = [27]
+36 = [26]
+30 = [22, 25]
+31 = [21]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [31]
+Etats finaux : [35,36]
+Table de transitions :
+          a      b      c   
+   30      30      36      32   
+   31      30      33      32   
+   32      36      36      32   
+   33      36      35      32   
+   34      36      36      36   
+   35      36      35      34   
+   36      36      36      36   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Non reconnu
+c : Non reconnu
+Mot vide : Non reconnu
+ab : Reconnu
+bcb : Reconnu
+bbca : Reconnu

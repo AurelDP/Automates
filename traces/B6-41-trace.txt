@@ -1,0 +1,92 @@
+Automate choisi : B6-41.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etats finaux : [1,2,3,4]
+Table de transitions :
+          a      b   
+   0      1      4   
+   1      2      3   
+   2      -      3   
+   3      5      5   
+   4      5      5   
+   5      5      5   
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etats finaux : [1,2,3,4]
+Table de transitions :
+          a      b   
+   0      1      4   
+   1      2      3   
+   2      6      3   
+   3      5      5   
+   4      5      5   
+   5      5      5   
+   6      6      6   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [1, 2, 3, 4] [0, 5, 6] 
+2) [3, 4] [1] [2] [5, 6] [0] 
+
+Affichage de l'automate :
+
+Etat initial : [11]
+Etats finaux : [7,8,9]
+Table de transitions :
+          a      b   
+   7      10      10   
+   8      9      7   
+   9      10      7   
+   10      10      10   
+   11      8      7   
+
+Correspondance des états (après et avant traitement) :
+7 = [3, 4]
+8 = [1]
+9 = [2]
+10 = [5, 6]
+11 = [0]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [11]
+Etats finaux : [10,11]
+Table de transitions :
+          a      b   
+   7      10      10   
+   8      9      7   
+   9      10      7   
+   10      10      10   
+   11      8      7   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Non reconnu
+ab : Non reconnu
+ba : Reconnu
+aabb : Reconnu
+aaba : Reconnu
