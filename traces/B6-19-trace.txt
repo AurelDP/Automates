@@ -1,0 +1,77 @@
+Automate choisi : B6-19.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [0]
+Table de transitions :
+          a   
+   0      0   
+   1      2   
+   2      0   
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [0]
+Table de transitions :
+          a   
+   0      0   
+   1      2   
+   2      0   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0] [1, 2] 
+2) [0] [1] [2] 
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etat final : [3]
+Table de transitions :
+          a   
+   3      3   
+   4      5   
+   5      3   
+
+Correspondance des états (après et avant traitement) :
+3 = [0]
+4 = [1]
+5 = [2]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etats finaux : [4,5]
+Table de transitions :
+          a   
+   3      3   
+   4      5   
+   5      3   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Reconnu
+aaa : Non reconnu
+aaaaa : Non reconnu
+Mot vide : Reconnu
+a**a : Non reconnu
+a***a*a*a* : Non reconnu
