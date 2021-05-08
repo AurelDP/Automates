@@ -1,4 +1,4 @@
-Automate choisi : B6-02.txt
+Automate choisi : B6-13.txt
 
 
 
@@ -7,32 +7,18 @@ AUTOMATE DE BASE
 
 Affichage de l'automate :
 
-Etat initial : [0]
-Etat final : [0]
-Table de transitions :
-          a   
-   0      0   
-
-
---------------------------
-Voulez-vous standardiser l'automate avant de déterminiser ?
-1) Oui
-2) Non, continuer vers la déterminisation
-
-
-Votre choix (entrez le numéro du choix) : 
-
---------------------------
-AUTOMATE STANDARD
-
-Affichage de l'automate :
-
 Etat initial : [1]
-Etats finaux : [0,1]
+Etats finaux : [0,3,4,5,6,7]
 Table de transitions :
           a   
    0      0   
-   1      0   
+   1      2   
+   2      3   
+   3      4   
+   4      5   
+   5      6   
+   6      7   
+   7      0   
 
 
 --------------------------------------
@@ -41,30 +27,40 @@ AUTOMATE DETERMINISTE COMPLET
 Affichage de l'automate :
 
 Etat initial : [1]
-Etats finaux : [0,1]
+Etats finaux : [0,3,4,5,6,7]
 Table de transitions :
           a   
    0      0   
-   1      0   
+   1      2   
+   2      3   
+   3      4   
+   4      5   
+   5      6   
+   6      7   
+   7      0   
 
 
 --------------------------
 AUTOMATE MINIMAL
 
 Détail des partitions :
-1) [0, 1] [] 
-2) [1, 0] 
+1) [0, 3, 4, 5, 6, 7] [1, 2] 
+2) [0, 3, 4, 5, 6, 7] [2] [1] 
 
 Affichage de l'automate :
 
-Etat initial : [2]
-Etat final : [2]
+Etat initial : [10]
+Etat final : [8]
 Table de transitions :
           a   
-   2      2   
+   8      8   
+   9      8   
+   10      9   
 
 Correspondance des états (après et avant traitement) :
-2 = [1, 0]
+8 = [0, 3, 4, 5, 6, 7]
+9 = [2]
+10 = [1]
 
 
 --------------------------
@@ -72,15 +68,19 @@ AUTOMATE COMPLEMENTAIRE
 
 Affichage de l'automate :
 
-Etat initial : [2]
+Etat initial : [10]
+Etats finaux : [9,10]
 Table de transitions :
           a   
-   2      2   
+   8      8   
+   9      8   
+   10      9   
 
 Liste des mots à reconnaître (séparés par un espace).
 Le mot vide est noté "*".
 Votre liste : Mots entrés :
+a : Reconnu
 aa : Non reconnu
-a : Non reconnu
-a* : Non reconnu
-Mot vide : Non reconnu
+a* : Reconnu
+*a : Reconnu
+Mot vide : Reconnu

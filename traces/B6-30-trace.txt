@@ -1,4 +1,4 @@
-Automate choisi : B6-02.txt
+Automate choisi : B6-30.txt
 
 
 
@@ -7,32 +7,15 @@ AUTOMATE DE BASE
 
 Affichage de l'automate :
 
-Etat initial : [0]
-Etat final : [0]
-Table de transitions :
-          a   
-   0      0   
-
-
---------------------------
-Voulez-vous standardiser l'automate avant de déterminiser ?
-1) Oui
-2) Non, continuer vers la déterminisation
-
-
-Votre choix (entrez le numéro du choix) : 
-
---------------------------
-AUTOMATE STANDARD
-
-Affichage de l'automate :
-
 Etat initial : [1]
-Etats finaux : [0,1]
+Etats finaux : [0,3,4]
 Table de transitions :
           a   
-   0      0   
-   1      0   
+   0      3   
+   1      2   
+   2      3   
+   3      4   
+   4      0   
 
 
 --------------------------------------
@@ -41,30 +24,37 @@ AUTOMATE DETERMINISTE COMPLET
 Affichage de l'automate :
 
 Etat initial : [1]
-Etats finaux : [0,1]
+Etats finaux : [0,3,4]
 Table de transitions :
           a   
-   0      0   
-   1      0   
+   0      3   
+   1      2   
+   2      3   
+   3      4   
+   4      0   
 
 
 --------------------------
 AUTOMATE MINIMAL
 
 Détail des partitions :
-1) [0, 1] [] 
-2) [1, 0] 
+1) [0, 3, 4] [1, 2] 
+2) [0, 3, 4] [1] [2] 
 
 Affichage de l'automate :
 
-Etat initial : [2]
-Etat final : [2]
+Etat initial : [6]
+Etat final : [5]
 Table de transitions :
           a   
-   2      2   
+   5      5   
+   6      7   
+   7      5   
 
 Correspondance des états (après et avant traitement) :
-2 = [1, 0]
+5 = [0, 3, 4]
+6 = [1]
+7 = [2]
 
 
 --------------------------
@@ -72,15 +62,20 @@ AUTOMATE COMPLEMENTAIRE
 
 Affichage de l'automate :
 
-Etat initial : [2]
+Etat initial : [6]
+Etats finaux : [6,7]
 Table de transitions :
           a   
-   2      2   
+   5      5   
+   6      7   
+   7      5   
 
 Liste des mots à reconnaître (séparés par un espace).
 Le mot vide est noté "*".
 Votre liste : Mots entrés :
-aa : Non reconnu
-a : Non reconnu
-a* : Non reconnu
-Mot vide : Non reconnu
+a : Reconnu
+aaaa : Non reconnu
+aaaaaaa : Non reconnu
+a**a : Non reconnu
+a* : Reconnu
+*a : Reconnu

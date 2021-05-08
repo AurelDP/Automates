@@ -1,0 +1,103 @@
+Automate choisi : B6-09.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etats finaux : [0,1]
+Table de transitions :
+          a      b   
+   0      2      -   
+   1      2      -   
+   2      3      3   
+   3      4      -   
+   4      5      5   
+   5      0      -   
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etats finaux : [0,1]
+Table de transitions :
+          a      b   
+   0      2      6   
+   1      2      6   
+   2      3      3   
+   3      4      6   
+   4      5      5   
+   5      0      6   
+   6      6      6   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0, 1] [2, 3, 4, 5, 6] 
+2) [0, 1] [2, 4, 3, 6] [5] 
+3) [0, 1] [2, 3, 6] [4] [5] 
+4) [0, 1] [2, 6] [3] [4] [5] 
+5) [0, 1] [6] [2] [3] [4] [5] 
+
+Affichage de l'automate :
+
+Etat initial : [7]
+Etat final : [7]
+Table de transitions :
+          a      b   
+   7      9      8   
+   8      8      8   
+   9      10      10   
+   10      11      8   
+   11      12      12   
+   12      7      8   
+
+Correspondance des états (après et avant traitement) :
+7 = [0, 1]
+8 = [6]
+9 = [2]
+10 = [3]
+11 = [4]
+12 = [5]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [7]
+Etats finaux : [8,9,10,11,12]
+Table de transitions :
+          a      b   
+   7      9      8   
+   8      8      8   
+   9      10      10   
+   10      11      8   
+   11      12      12   
+   12      7      8   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Reconnu
+ab : Reconnu
+ba : Reconnu
+ababab : Reconnu
+babab : Reconnu
+ae : Non reconnu
+r : Non reconnu
+Mot vide : Non reconnu
+Mot vide : Non reconnu
+a* : Reconnu
+*a : Reconnu
