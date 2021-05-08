@@ -594,7 +594,7 @@ public class Automaton {
 	}
 	
 	public HashMap<Integer, ArrayList<Integer>> minimization() {
-		// returnParts is List in List in List because it will return all parts (that are List of List)
+		// parts and partsBis are List of List of states and they will be used to save groupes of states that we can potentialy merge
 		ArrayList<ArrayList<State>> partsBis = new ArrayList<ArrayList<State>>();
 		
 		partsBis.add(getTerminalStates());
@@ -605,15 +605,19 @@ public class Automaton {
 		// We reset numbers of transitions
 		nbrTransitions = 0;
 		
+		// Increment is only used to display groups of states during the minimization
 		int increment = 1;
 		Launcher.println("\nDétail des partitions :");
 		
+		// While parts and partsBis (parts is the old group, partsBis is the current group) are different
+		// then we do the algorithm
 		do {
 			// We copy partsBis in parts
 			parts = new ArrayList<ArrayList<State>>(partsBis);
 			// We reset partsBis (it will be the next parts)
 			partsBis = new ArrayList<ArrayList<State>>();
 			
+			// Simply display groups of potentialy merged states
 			Launcher.print(increment + ") ");
 			for (ArrayList<State> stateListForDisplay : parts) {
 				ArrayList<Integer> integerPart = nameListFromStateList(stateListForDisplay);
@@ -621,9 +625,12 @@ public class Automaton {
 			}
 			Launcher.print("\n");
 			
+			// For each list of states in part
 			for (ArrayList<State> states : parts) {
+				// We recover the line
 				HashMap<State, ArrayList<Integer>> lines = new HashMap<State, ArrayList<Integer>>();
 				
+				// The line will be
 				for (State state : states) {
 					ArrayList<Integer> integerList = new ArrayList<Integer>();
 					

@@ -101,15 +101,6 @@ public class Launcher {
 						if (!AFDC.isComplete()) {
 							
 							AFDC.completion();
-							
-							
-							println("\n\n##########################################\n"
-									+ "COMPLET");
-							AFDC.display();
-							
-							
-							
-							
 							links = AFDC.determinization();
 						}
 					}
