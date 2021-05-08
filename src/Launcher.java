@@ -364,7 +364,7 @@ public class Launcher {
 		String line;
 		String[] words;
 		do {
-			System.out.print("\nListe des mots à reconnaître (séparés par un espace).\n"
+			print("\nListe des mots à reconnaître (séparés par un espace).\n"
 					+ "Le mot vide est noté \"*\".\n"
 					+ "Votre liste : ");
 			line = sc.nextLine();
@@ -394,7 +394,7 @@ public class Launcher {
 			return true;
 		
 		// If void symbol is in word, we remove it
-		word.replace("*", "");
+		word = word.replace("*", "");
 		
 		// Convert word into array of chars
 		char[] chars = word.toCharArray();
