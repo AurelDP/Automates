@@ -1,0 +1,83 @@
+Automate choisi : B6-02.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etat final : [0]
+Table de transitions :
+          a   
+   0      0   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etats finaux : [0,1]
+Table de transitions :
+          a   
+   0      0   
+   1      0   
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etats finaux : [0,1]
+Table de transitions :
+          a   
+   0      0   
+   1      0   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0, 1] [] 
+2) [0, 1] 
+
+Affichage de l'automate :
+
+Etat initial : [2]
+Etat final : [2]
+Table de transitions :
+          a   
+   2      2   
+
+Correspondance des états (après et avant traitement) :
+2 = [0, 1]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [2]
+Table de transitions :
+          a   
+   2      2   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+aaa : Non reconnu

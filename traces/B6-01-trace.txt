@@ -1,0 +1,53 @@
+Automate choisi : B6-01.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etat final : [0]
+Pas de transitions pour cet automate !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etat final : [0]
+Pas de transitions pour cet automate !
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0] [] 
+2) [0] 
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [1]
+Pas de transitions pour cet automate !
+
+Correspondance des états (après et avant traitement) :
+1 = [0]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Pas de transitions pour cet automate !
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
