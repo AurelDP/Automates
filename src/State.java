@@ -26,20 +26,12 @@ public class State {
 		}
 	}
 	
+	/*-----------------------------------------------------------------------------
+	 * Getters
+	 ----------------------------------------------------------------------------*/
+	
 	public int getName() {
 		return nameState;
-	}
-	
-	public void setName(int name) {
-		this.nameState = name;
-	}
-	
-	public boolean isFinal() {
-		return isFinal;
-	}
-	
-	public boolean isInitial() {
-		return isInitial;
 	}
 	
 	public int getNbrTransitions() {
@@ -49,7 +41,15 @@ public class State {
 	public ArrayList<Transition> getTransiList() {
 		return transitions;
 	}
-		
+	
+	/*-----------------------------------------------------------------------------
+	 * Setters
+	 ----------------------------------------------------------------------------*/
+	
+	public void setName(int name) {
+		this.nameState = name;
+	}
+	
 	public void setFinal(boolean isFinal) {
 		this.isFinal = isFinal;
 	}
@@ -68,6 +68,18 @@ public class State {
 	
 	public void setTransi(String letter, int arrivalStateName) {
 		transitions.add(new Transition(letter, arrivalStateName));
+	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Testers
+	 ----------------------------------------------------------------------------*/
+	
+	public boolean isFinal() {
+		return isFinal;
+	}
+	
+	public boolean isInitial() {
+		return isInitial;
 	}
 	
 }
