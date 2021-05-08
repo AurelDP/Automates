@@ -3,6 +3,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
+
 public class Automaton {
 	private int nbrLettersInLang;
 	private ArrayList<String> lettersInLang;
@@ -44,26 +45,30 @@ public class Automaton {
 		return lettersInLang;
 	}
 	
+	/*-----------------------------------------------------------------------------
+	 * Display methods
+	 ----------------------------------------------------------------------------*/
+	
 	public void display() {
-		System.out.println("\nAffichage de l'automate :\n");
+		Launcher.println("\nAffichage de l'automate :\n");
 		
 		if (nbrInitialStates == 1) {
-			System.out.print("Etat initial : ");
+			Launcher.print("Etat initial : ");
 			// We loop all the states and if a state is initial, we display it
 			for (State s : states) {
 				if (s.isInitial())
-					System.out.println("[" + s.getName() + "]");
+					Launcher.println("[" + s.getName() + "]");
 			}
 		// If there are more than 2 initial states, we apply a slightly different display
 		} else if (nbrInitialStates >= 2) {
-			System.out.print("Etats initiaux : [");
+			Launcher.print("Etats initiaux : [");
 			int i = 0;
 			for (State s : states) {
 				if (s.isInitial() && i < nbrInitialStates-1) {
-					System.out.print(s.getName() + ",");
+					Launcher.print(s.getName() + ",");
 					i ++;
 				} else if (s.isInitial() && i == nbrInitialStates-1) {
-					System.out.println(s.getName() + "]");
+					Launcher.println(s.getName() + "]");
 					i ++;
 				}
 			}
@@ -71,36 +76,36 @@ public class Automaton {
 		
 		// Same principle as for the initial states
 		if (nbrFinalStates == 1) {
-			System.out.print("Etat final : ");
+			Launcher.print("Etat final : ");
 			for (State s : states) {
 				if (s.isFinal())
-					System.out.println("[" + s.getName() + "]");
+					Launcher.println("[" + s.getName() + "]");
 			}
 		} else if (nbrFinalStates >= 2) {
-			System.out.print("Etats finaux : [");
+			Launcher.print("Etats finaux : [");
 			int i = 0;
 			for (State s : states) {
 				if (s.isFinal() && i < nbrFinalStates-1) {
-					System.out.print(s.getName() + ",");
+					Launcher.print(s.getName() + ",");
 					i ++;
 				} else if (s.isFinal() && i == nbrFinalStates-1) {
-					System.out.println(s.getName() + "]");
+					Launcher.println(s.getName() + "]");
 					i ++;
 				}
 			}
 		}
 		
 		if (nbrTransitions >= 1) {
-			System.out.print("Table de transitions :\n       ");
+			Launcher.print("Table de transitions :\n       ");
 			for (String car : lettersInLang) {
-				System.out.print("   " + car + "   ");
+				Launcher.print("   " + car + "   ");
 			}
-			System.out.print("\n");
+			Launcher.print("\n");
 			for (State s : states) {
-				System.out.print("   " + s.getName() + "   ");
+				Launcher.print("   " + s.getName() + "   ");
 				// After the name of each state, we go through the letters of the alphabet
 				for (String car : lettersInLang) {
-					System.out.print("   ");
+					Launcher.print("   ");
 					String arrivalState = "-";
 					int i = 0;
 					// For each transition of the state
@@ -116,22 +121,26 @@ public class Automaton {
 							i ++;
 						}
 					}
-					System.out.print(arrivalState + "   ");
+					Launcher.print(arrivalState + "   ");
 				}
-				System.out.print("\n");
+				Launcher.print("\n");
 			}
 		} else {
-			System.out.println("Pas de transitions pour cet automate !");
+			Launcher.println("Pas de transitions pour cet automate !");
 		}
 		
 	}
 	
 	public void displayDeterministOrMinimalistLinks(HashMap<Integer, ArrayList<Integer>> links) {
-		System.out.println("\nCorrespondance des états (après et avant traitement) :");
+		Launcher.println("\nCorrespondance des états (après et avant traitement) :");
 		for (Integer i : links.keySet()) {
-			System.out.println(i + " = " + links.get(i));
+			Launcher.println(i + " = " + links.get(i));
 		}
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Getters
+	 ----------------------------------------------------------------------------*/
 	
 	public ArrayList<State> getStates() {
 		return states;
@@ -145,10 +154,14 @@ public class Automaton {
 		}
 		return null;
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Tests on automatons
+	 ----------------------------------------------------------------------------*/
     
 	public boolean isDeterminist() {	
 		if (nbrInitialStates > 1) {
-			System.out.println("\nL'automate n'est pas déterministe car il a plus d'un état initial !");
+			Launcher.println("\nL'automate n'est pas déterministe car il a plus d'un état initial !");
 			return false;
 		}
 		else {
@@ -159,7 +172,7 @@ public class Automaton {
 						if (t.getLetter().equals(alpha))
 							counter++;
 						if (counter == 2) {
-							System.out.println("\nL'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !");
+							Launcher.println("\nL'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !");
 							return false;
 						}
 					}
@@ -181,7 +194,7 @@ public class Automaton {
 							alphaUsed = true;
 					}
 					if (!alphaUsed) {
-						System.out.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
+						Launcher.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
 						return false;
 					}
 				}
@@ -208,13 +221,17 @@ public class Automaton {
 		for (State s : states) {
 			for (Transition t : s.getTransiList()) {
 				if (t.getLetter().equals("*")) {
-					System.out.println("\nL'automate est asynchrone car une transition epsilon a été trouvée !\n\n");
+					Launcher.println("\nL'automate est asynchrone car une transition epsilon a été trouvée !\n\n");
 					return true;
 				}
 			}
 		}
 		return false;
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Other methods
+	 ----------------------------------------------------------------------------*/
 	
 	private void copyAndAddTransi(State current, State next) {
 		for (Transition t : next.getTransiList()) {
@@ -233,6 +250,10 @@ public class Automaton {
 				nbrInitialStates ++;
 		}
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Methods used by asynchronous system
+	 ----------------------------------------------------------------------------*/
 	
 	public void removeUnlinkedStates() {
 		ArrayList<State> statesToRemove = new ArrayList<State>();
@@ -296,6 +317,10 @@ public class Automaton {
         updateFinalAndInitialNbr();
 	}
 	
+	/*-----------------------------------------------------------------------------
+	 * Complementary method
+	 ----------------------------------------------------------------------------*/
+	
 	public void complementaryAutomaton() {
 		// If the automaton is not complete, we have to complete it before make it's complementary
 		if (!this.isComplete())
@@ -311,6 +336,10 @@ public class Automaton {
 			}
 		}
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Standardization method
+	 ----------------------------------------------------------------------------*/
 	
 	public void standardization() {
 		if (!isStandard()) {
@@ -332,8 +361,12 @@ public class Automaton {
 			nbrStates ++;
 			updateFinalAndInitialNbr();
 		} else
-			System.out.println("L'automate est déjà standard !");
+			Launcher.println("L'automate est déjà standard !");
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Methods used with determinization
+	 ----------------------------------------------------------------------------*/
 	
 	// This method is called when the state is supposed to be not in any transition
 	// (especially called in determinization)
@@ -448,6 +481,10 @@ public class Automaton {
 		
 		return links;
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Completion method
+	 ----------------------------------------------------------------------------*/
     
 	public void completion() {
 		nbrStates ++;
@@ -477,6 +514,10 @@ public class Automaton {
 			}
 		}
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Methods used in minimization
+	 ----------------------------------------------------------------------------*/
 	
 	private ArrayList<State> getTerminalStates() {
 		ArrayList<State> terminalStates = new ArrayList<State>();
@@ -524,7 +565,7 @@ public class Automaton {
 		nbrTransitions = 0;
 		
 		int increment = 1;
-		System.out.println("\nDétail des partitions :");
+		Launcher.println("\nDétail des partitions :");
 		
 		do {
 			// We copy partsBis in parts
@@ -532,12 +573,12 @@ public class Automaton {
 			// We reset partsBis (it will be the next parts)
 			partsBis = new ArrayList<ArrayList<State>>();
 			
-			System.out.print(increment + ") ");
+			Launcher.print(increment + ") ");
 			for (ArrayList<State> stateListForDisplay : parts) {
 				ArrayList<Integer> integerPart = nameListFromStateList(stateListForDisplay);
-				System.out.print(integerPart + " ");
+				Launcher.print(integerPart + " ");
 			}
-			System.out.print("\n");
+			Launcher.print("\n");
 			
 			for (ArrayList<State> states : parts) {
 				HashMap<State, ArrayList<Integer>> lines = new HashMap<State, ArrayList<Integer>>();

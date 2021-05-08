@@ -13,6 +13,10 @@ public class Transition {
 		this.nameArrivalState = transition.nameArrivalState;
 	}
 	
+	/*-----------------------------------------------------------------------------
+	 * Getters
+	 ----------------------------------------------------------------------------*/
+	
 	public String getLetter() {
 		return letter;
 	}
@@ -20,6 +24,10 @@ public class Transition {
 	public int getArrivalStateName() {
 		return nameArrivalState;
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Setters
+	 ----------------------------------------------------------------------------*/
 	
 	public void setLetter(String s) {
 		this.letter = s;

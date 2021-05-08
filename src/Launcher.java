@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Launcher {
-
+	
+	public static PrintStream ps = null;
+	
 	public static void main(String[] args) {
 		int entry;
 		Scanner sc = null;
 		boolean run = true;
-		PrintStream outStream = System.out;
-		OutputStream os = null;
 		
 		// We get the name of all the files contained in the "automates" folder
 		ArrayList<String> namesTxtFiles = findNamesInFile(new File("./automates"));
@@ -31,46 +31,54 @@ public class Launcher {
 					entry = sc.nextInt();
 				} while (entry <= 0 || entry > namesTxtFiles.size());
 				
-				
+				// We create a new nameOutputFile to create our txt trace output
 				String nameOutputFile = namesTxtFiles.get(entry - 1);
 				nameOutputFile = nameOutputFile.replace(".txt", "");
 				nameOutputFile =  "./traces/" + nameOutputFile + "-trace.txt";
-				File newFile = new File(nameOutputFile);
-				newFile.getParentFile().mkdirs();
 				
+				// We create the new txt (and we delete the older if there is an older)
+				File f = new File(nameOutputFile);
+				try {
+					if (!f.createNewFile()) {
+						f.delete();
+						f.createNewFile();
+					}
+				} catch (Exception e) {
+		            System.err.println(e);
+		        }
 				
-				
-				if (!newFile.exists()) {
-					newFile.createNewFile();
-					
+				// We create a new printer into the output file
+				try {
+					ps = new PrintStream(nameOutputFile);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
 				}
-									
-				System.out.println(nameOutputFile);
-				os = new FileOutputStream(nameOutputFile, true);
 				
-				
-				System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
+				// System.out.print and System.out.println are replaced by print and println
+				// which are static public methods, to allow us to print in the console and in the file
+				// in the same time
+				println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 				
 				// We recover the chosen automaton and we write it in the program memory
 				Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
-				System.out.println("\n\n--------------------------\n"
+				println("\n\n--------------------------\n"
 						+ "AUTOMATE DE BASE");
 				AF.display();
 				
 				Automaton AFstd = null;
 				if (!AF.isStandard()) {
-					System.out.println("\n\n--------------------------\n"
+					println("\n\n--------------------------\n"
 							+ "Voulez-vous standardiser l'automate avant de déterminiser ?\n"
 							+ "1) Oui\n"
 							+ "2) Non, continuer vers la déterminisation\n");
 					do {
-						System.out.print("\nVotre choix (entrez le numéro du choix) : ");
+						print("\nVotre choix (entrez le numéro du choix) : ");
 						sc = new Scanner(System.in);
 						entry = sc.nextInt();
 					} while (entry < 1 || entry > 2);
 					if (entry == 1) {
 						AFstd = new Automaton(AF);
-						System.out.println("\n\n--------------------------\n"
+						println("\n\n--------------------------\n"
 								+ "AUTOMATE STANDARD");
 						AFstd.standardization();
 						AFstd.display();
@@ -95,7 +103,7 @@ public class Launcher {
 							links = AFDC.determinization();
 						}
 					}
-					System.out.println("\n\n--------------------------------------\n"
+					println("\n\n--------------------------------------\n"
 							+ "AUTOMATE DETERMINISTE COMPLET");
 					AFDC.display();
 					if (links != null)
@@ -119,7 +127,7 @@ public class Launcher {
 							links = AFDC.determinization();
 						}
 					}
-					System.out.println("\n\n--------------------------------------\n"
+					println("\n\n--------------------------------------\n"
 							+ "AUTOMATE DETERMINISTE COMPLET");
 					AFDC.display();
 					if (links != null)
@@ -129,18 +137,18 @@ public class Launcher {
 
 				Automaton AFDCstd = null;
 				if (!AFDC.isStandard()) {
-					System.out.println("\n\n--------------------------\n"
+					println("\n\n--------------------------\n"
 							+ "Voulez-vous standardiser l'automate avant de minimiser ?\n"
 							+ "1) Oui\n"
 							+ "2) Non, continuer vers la minimisation\n");
 					do {
-						System.out.print("\nVotre choix (entrez le numéro du choix) : ");
+						print("\nVotre choix (entrez le numéro du choix) : ");
 						sc = new Scanner(System.in);
 						entry = sc.nextInt();
 					} while (entry < 1 || entry > 2);
 					if (entry == 1) {
 						AFDCstd = new Automaton(AFDC);
-						System.out.println("\n\n--------------------------\n"
+						println("\n\n--------------------------\n"
 								+ "AUTOMATE STANDARD");
 						AFDCstd.standardization();
 						AFDCstd.display();
@@ -153,14 +161,14 @@ public class Launcher {
 					AFDCM = new Automaton(AFDCstd);
 				else
 					AFDCM = new Automaton(AFDC);
-				System.out.println("\n\n--------------------------\n"
+				println("\n\n--------------------------\n"
 						+ "AUTOMATE MINIMAL");
 				HashMap<Integer, ArrayList<Integer>> links = AFDCM.minimization();
 				AFDCM.display();
 				AFDCM.displayDeterministOrMinimalistLinks(links);
 				
 				Automaton AFcomp = new Automaton(AFDCM);
-				System.out.println("\n\n--------------------------\n"
+				println("\n\n--------------------------\n"
 						+ "AUTOMATE COMPLEMENTAIRE");
 				AFcomp.complementaryAutomaton();
 				AFcomp.display();
@@ -168,19 +176,19 @@ public class Launcher {
 				
 				String[] words = readWords(sc);
 				if (words.length != 0) {
-					System.out.println("Mots entrés :");
+					println("Mots entrés :");
 					for (String w : words) {
 						if (w.matches("[*]+"))
-							System.out.print("Mot vide");
+							print("Mot vide");
 						else
-							System.out.print(w);
+							print(w);
 						if (recognizedWord(AFcomp, w))
-							System.out.println(" : Reconnu");
+							println(" : Reconnu");
 						else
-							System.out.println(" : Non reconnu");
+							println(" : Non reconnu");
 					}
 				} else {
-					System.out.println("Aucun mot n'a été entré...");
+					println("Aucun mot n'a été entré...");
 				}
 							
 				
@@ -194,7 +202,7 @@ public class Launcher {
 				} while (entry < 1 || entry > 2);
 				
 				if (entry == 2)
-					run = false;
+					run = false;				
 			
 			} while (run);
 			
@@ -204,6 +212,31 @@ public class Launcher {
 			System.out.println("Le dossier des automates est vide !");
 		}
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Printers methods (allow to print in console and trace file)
+	 ----------------------------------------------------------------------------*/
+	
+	// Methods print and println are used to print in file AND in console
+	public static void print(String s) {
+		PrintStream orig = System.out;
+		System.setOut(ps);
+		System.out.print(s);
+		System.setOut(orig);
+		System.out.print(s);
+	}
+	
+	public static void println(String s) {
+		PrintStream orig = System.out;
+		System.setOut(ps);
+		System.out.println(s);
+		System.setOut(orig);
+		System.out.println(s);
+	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Next methods are used to get automaton information from file
+	 ----------------------------------------------------------------------------*/
 
 	private static Automaton getAutomatonFromFile(final String nom) {
 		// These variables will be used for the constructor of the automaton
@@ -322,6 +355,10 @@ public class Launcher {
 		}
 		return names;
 	}
+	
+	/*-----------------------------------------------------------------------------
+	 * Next methods are used to read and recognize words
+	 ----------------------------------------------------------------------------*/
 	
 	private static String[] readWords(Scanner sc) {
 		String line;
