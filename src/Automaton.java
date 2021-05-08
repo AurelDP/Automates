@@ -483,11 +483,23 @@ public class Automaton {
 						links.put(states.get(states.size()-1).getName(), nameListFromStateList(stateCollection));
 						// We also add this new merged state in statesToDo
 						statesToDo.add(states.get(states.size()-1));
+						
+						// If the new state is not in the list, we add it as new transition (because the state is created by the transition itself)
+						currentMergedState.getTransiList().add(new Transition(alpha, states.get(states.size()-1).getName()));
+						currentMergedState.incrementNbrTransi();
+						nbrTransitions ++;
+					} else {
+						// If the new state is already in the list, then we have to find the key associated with stateCollection and add this key as a new transition
+						for (State s : associatedStates.keySet()) {
+							if (associatedStates.get(s).equals(stateCollection)) {
+								currentMergedState.getTransiList().add(new Transition(alpha, s.getName()));
+								currentMergedState.incrementNbrTransi();
+								nbrTransitions ++;
+								break;
+							}
+						}
+						
 					}
-					// We create the new transition of mergedState with letter alpha to new state created
-					currentMergedState.getTransiList().add(new Transition(alpha, states.get(states.size()-1).getName()));
-					currentMergedState.incrementNbrTransi();
-					nbrTransitions ++;
 				}
 			}
 			
