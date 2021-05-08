@@ -1,0 +1,83 @@
+Automate choisi : B6-27.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [0]
+Table de transitions :
+          a      b   
+   0      0      0   
+   1      2      2   
+   2      -      0   
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [0]
+Table de transitions :
+          a      b   
+   0      0      0   
+   1      2      2   
+   2      3      0   
+   3      3      3   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [0] [1, 2, 3] 
+2) [0] [1, 3] [2] 
+3) [0] [1] [3] [2] 
+
+Affichage de l'automate :
+
+Etat initial : [5]
+Etat final : [4]
+Table de transitions :
+          a      b   
+   4      4      4   
+   5      7      7   
+   6      6      6   
+   7      6      4   
+
+Correspondance des états (après et avant traitement) :
+4 = [0]
+5 = [1]
+6 = [3]
+7 = [2]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [5]
+Etats finaux : [5,6,7]
+Table de transitions :
+          a      b   
+   4      4      4   
+   5      7      7   
+   6      6      6   
+   7      6      4   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Reconnu
+b : Reconnu
+ab : Non reconnu
+ba : Reconnu
+Mot vide : Reconnu

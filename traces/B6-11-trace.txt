@@ -1,0 +1,109 @@
+Automate choisi : B6-11.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [0]
+Etat final : [2]
+Table de transitions :
+          a      b   
+   0      2      3   
+   1      3      3   
+   2      1      0   
+   3      3      3   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etat final : [2]
+Table de transitions :
+          a      b   
+   0      2      3   
+   1      3      3   
+   2      1      0   
+   3      3      3   
+   4      2      3   
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etat final : [2]
+Table de transitions :
+          a      b   
+   0      2      3   
+   1      3      3   
+   2      1      0   
+   3      3      3   
+   4      2      3   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [2] [0, 1, 3, 4] 
+2) [2] [1, 3] [0, 4] 
+
+Affichage de l'automate :
+
+Etat initial : [7]
+Etat final : [5]
+Table de transitions :
+          a      b   
+   5      6      7   
+   6      6      6   
+   7      5      6   
+
+Correspondance des états (après et avant traitement) :
+5 = [2]
+6 = [1, 3]
+7 = [0, 4]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [7]
+Etats finaux : [6,7]
+Table de transitions :
+          a      b   
+   5      6      7   
+   6      6      6   
+   7      5      6   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Reconnu
+ab : Reconnu
+ba : Reconnu
+Mot vide : Reconnu
+*a : Non reconnu
+*b : Reconnu
+baabb : Reconnu
+abba : Reconnu
+ae : Non reconnu
+ababababab : Reconnu

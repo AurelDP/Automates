@@ -518,6 +518,7 @@ public class Automaton {
 			}
 		}
 		
+		removeUnlinkedStates();
 		updateFinalAndInitialNbr();
 		
 		return links;
@@ -627,10 +628,11 @@ public class Automaton {
 			
 			// For each list of states in part
 			for (ArrayList<State> states : parts) {
-				// We recover the line
+				// We recover the lines
 				HashMap<State, ArrayList<Integer>> lines = new HashMap<State, ArrayList<Integer>>();
 				
-				// The line will be
+				// The lines will be saved in HashMap with state associated with List of Integer (which represent the index of each arrival list in
+				// which the arrival state is located)
 				for (State state : states) {
 					ArrayList<Integer> integerList = new ArrayList<Integer>();
 					
@@ -656,6 +658,7 @@ public class Automaton {
 					lines.put(state, integerList);
 				}
 				
+				// Then, we will loop in the lines and we will recreate new list of states if multiple lines are equals
 				while (lines.size() > 0) {
 					
 					ArrayList<Integer> tempIndexList = new ArrayList<Integer>();
@@ -694,6 +697,7 @@ public class Automaton {
 			
 		} while (!parts.equals(partsBis));
 		
+		// Then, when we have our parts (list of lists of states), we merge each list of state to create a new state
 		HashMap<Integer, ArrayList<Integer>> linkedStates = new HashMap<Integer, ArrayList<Integer>>();
 		
 		for (ArrayList<State> statesList : partsBis) {
@@ -722,6 +726,7 @@ public class Automaton {
 			linkedStates.put(getMaxStateName(), namesOfStates);
 		}
 		
+		// This loop is used to complete transitions
 		for (State s : states) {
 			for (Integer i : linkedStates.keySet()) {
 				

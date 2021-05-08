@@ -1,0 +1,143 @@
+Automate choisi : B6-40.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etats initiaux : [0,1]
+Etats finaux : [0,2]
+Table de transitions :
+          a      b   
+   0      -      1,2   
+   1      0,2      2   
+   2      0      -   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [3]
+Etats finaux : [0,2,3]
+Table de transitions :
+          a      b   
+   0      -      1,2   
+   1      0,2      2   
+   2      0      -   
+   3      0,2      1,2,2   
+
+L'automate n'est pas déterministe car il a plus d'un état initial !
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etats finaux : [4,5,6,7,8,9,10,11]
+Table de transitions :
+          a      b   
+   4      5      6   
+   5      7      8   
+   6      5      9   
+   7      -      6   
+   8      10      9   
+   9      11      12   
+   10      11      8   
+   11      12      8   
+   12      12      12   
+
+Correspondance des états (après et avant traitement) :
+4 = [0, 1]
+5 = [0, 2]
+6 = [1, 2]
+7 = [0]
+8 = [1, 2, 3]
+9 = [2, 3]
+10 = [0, 2, 3]
+11 = [0, 3]
+12 = [3]
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [4, 5, 6, 7, 8, 9, 10, 11] [12] 
+2) [4, 5, 6, 7, 8, 10] [9] [11] [12] 
+3) [6, 8] [4, 5, 7] [10] [9] [11] [12] 
+4) [8] [6] [4, 5] [7] [10] [9] [11] [12] 
+5) [8] [6] [4] [5] [7] [10] [9] [11] [12] 
+
+Affichage de l'automate :
+
+Etat initial : [15]
+Etats finaux : [13,14,15,16,17,18,19,20]
+Table de transitions :
+          a      b   
+   13      18      19   
+   14      16      19   
+   15      16      14   
+   16      17      13   
+   17      -      14   
+   18      20      13   
+   19      20      21   
+   20      21      13   
+   21      21      21   
+
+Correspondance des états (après et avant traitement) :
+16 = [5]
+17 = [7]
+18 = [10]
+19 = [9]
+20 = [11]
+21 = [12]
+13 = [8]
+14 = [6]
+15 = [4]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+Affichage de l'automate :
+
+Etat initial : [15]
+Etats finaux : [21,22]
+Table de transitions :
+          a      b   
+   13      18      19   
+   14      16      19   
+   15      16      14   
+   16      17      13   
+   17      -      14   
+   18      20      13   
+   19      20      21   
+   20      21      13   
+   21      21      21   
+   22      22      22   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Non reconnu
+abaaab : Reconnu
+Mot vide : Non reconnu

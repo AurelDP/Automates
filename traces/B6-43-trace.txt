@@ -1,0 +1,109 @@
+Automate choisi : B6-43.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [2]
+Table de transitions :
+          a      b   
+   0      0      0,1   
+   1      2      -   
+   2      2      2   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [3]
+Etat final : [2]
+Table de transitions :
+          a      b   
+   0      0      0,1   
+   1      2      -   
+   2      2      2   
+   3      2      -   
+
+L'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etat final : [5]
+Table de transitions :
+          a      b   
+   4      5      6   
+   5      5      5   
+   6      6      6   
+
+Correspondance des états (après et avant traitement) :
+4 = [1]
+5 = [2]
+6 = [3]
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [5] [4, 6] 
+2) [5] [6] [4] 
+
+Affichage de l'automate :
+
+Etat initial : [9]
+Etat final : [7]
+Table de transitions :
+          a      b   
+   7      7      7   
+   8      8      8   
+   9      7      8   
+
+Correspondance des états (après et avant traitement) :
+7 = [5]
+8 = [6]
+9 = [4]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [9]
+Etats finaux : [8,9]
+Table de transitions :
+          a      b   
+   7      7      7   
+   8      8      8   
+   9      7      8   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+b : Reconnu
+Mot vide : Reconnu
+ab : Non reconnu
+bba : Reconnu
+bb : Reconnu
