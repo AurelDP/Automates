@@ -147,8 +147,10 @@ public class Automaton {
 	}
     
 	public boolean isDeterminist() {	
-		if (nbrInitialStates > 1)
+		if (nbrInitialStates > 1) {
+			System.out.println("\nL'automate n'est pas déterministe car il a plus d'un état initial !");
 			return false;
+		}
 		else {
 			for (State s : states) {
 				for (String alpha : lettersInLang) {
@@ -156,8 +158,10 @@ public class Automaton {
 					for (Transition t : s.getTransiList()) {
 						if (t.getLetter().equals(alpha))
 							counter++;
-						if (counter == 2)
+						if (counter == 2) {
+							System.out.println("\nL'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !");
 							return false;
+						}
 					}
 				}	
 			}
@@ -176,8 +180,10 @@ public class Automaton {
 						if (t.getLetter().equals(alpha))
 							alphaUsed = true;
 					}
-					if (!alphaUsed)
+					if (!alphaUsed) {
+						System.out.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
 						return false;
+					}
 				}
 			}
 		}
@@ -201,8 +207,10 @@ public class Automaton {
 	public boolean isAsynchron() {
 		for (State s : states) {
 			for (Transition t : s.getTransiList()) {
-				if (t.getLetter().equals("*"))
+				if (t.getLetter().equals("*")) {
+					System.out.println("\nL'automate est asynchrone car une transition epsilon a été trouvée !\n\n");
 					return true;
+				}
 			}
 		}
 		return false;
