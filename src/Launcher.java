@@ -9,6 +9,8 @@ public class Launcher {
 		int entry;
 		Scanner sc = null;
 		boolean run = true;
+		PrintStream outStream = System.out;
+		OutputStream os = null;
 		
 		// We get the name of all the files contained in the "automates" folder
 		ArrayList<String> namesTxtFiles = findNamesInFile(new File("./automates"));
@@ -28,9 +30,26 @@ public class Launcher {
 					sc = new Scanner(System.in);
 					entry = sc.nextInt();
 				} while (entry <= 0 || entry > namesTxtFiles.size());
-		
-				System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 				
+				
+				String nameOutputFile = namesTxtFiles.get(entry - 1);
+				nameOutputFile = nameOutputFile.replace(".txt", "");
+				nameOutputFile =  "./traces/" + nameOutputFile + "-trace.txt";
+				File newFile = new File(nameOutputFile);
+				newFile.getParentFile().mkdirs();
+				
+				
+				
+				if (!newFile.exists()) {
+					newFile.createNewFile();
+					
+				}
+									
+				System.out.println(nameOutputFile);
+				os = new FileOutputStream(nameOutputFile, true);
+				
+				
+				System.out.println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 				
 				// We recover the chosen automaton and we write it in the program memory
 				Automaton AF = getAutomatonFromFile(namesTxtFiles.get(entry - 1));
@@ -38,14 +57,56 @@ public class Launcher {
 						+ "AUTOMATE DE BASE");
 				AF.display();
 				
+				Automaton AFstd = null;
+				if (!AF.isStandard()) {
+					System.out.println("\n\n--------------------------\n"
+							+ "Voulez-vous standardiser l'automate avant de déterminiser ?\n"
+							+ "1) Oui\n"
+							+ "2) Non, continuer vers la déterminisation\n");
+					do {
+						System.out.print("\nVotre choix (entrez le numéro du choix) : ");
+						sc = new Scanner(System.in);
+						entry = sc.nextInt();
+					} while (entry < 1 || entry > 2);
+					if (entry == 1) {
+						AFstd = new Automaton(AF);
+						System.out.println("\n\n--------------------------\n"
+								+ "AUTOMATE STANDARD");
+						AFstd.standardization();
+						AFstd.display();
+					}
+				}
+
 				
 				Automaton AFDC = null;
-				if (AF.isAsynchrone())
-					System.out.println("\n\nL'automate est asynchrone et ne pourra pas être traité.");
-				else {
+				if (AF.isAsynchron()) {
 					HashMap<Integer, ArrayList<Integer>> links = null;
 					
 					AFDC = new Automaton(AF);
+					AFDC.supAsynchron();
+					
+					if (AFDC.isDeterminist()) {
+						if (!AFDC.isComplete()) {
+							AFDC.completion();
+						}
+					} else {
+						if (!AFDC.isComplete()) {
+							AFDC.completion();
+							links = AFDC.determinization();
+						}
+					}
+					System.out.println("\n\n--------------------------------------\n"
+							+ "AUTOMATE DETERMINISTE COMPLET");
+					AFDC.display();
+					if (links != null)
+						AFDC.displayDeterministOrMinimalistLinks(links);
+				} else {
+					HashMap<Integer, ArrayList<Integer>> links = null;
+					
+					if (AFstd != null)
+						AFDC = new Automaton(AFstd);
+					else
+						AFDC = new Automaton(AF);
 					if (AF.isDeterminist()) {
 						if (!AF.isComplete()) {
 							AFDC = new Automaton(AF);
@@ -65,23 +126,44 @@ public class Launcher {
 						AFDC.displayDeterministOrMinimalistLinks(links);
 				}
 				
+
+				Automaton AFDCstd = null;
+				if (!AFDC.isStandard()) {
+					System.out.println("\n\n--------------------------\n"
+							+ "Voulez-vous standardiser l'automate avant de minimiser ?\n"
+							+ "1) Oui\n"
+							+ "2) Non, continuer vers la minimisation\n");
+					do {
+						System.out.print("\nVotre choix (entrez le numéro du choix) : ");
+						sc = new Scanner(System.in);
+						entry = sc.nextInt();
+					} while (entry < 1 || entry > 2);
+					if (entry == 1) {
+						AFDCstd = new Automaton(AFDC);
+						System.out.println("\n\n--------------------------\n"
+								+ "AUTOMATE STANDARD");
+						AFDCstd.standardization();
+						AFDCstd.display();
+					}
+				}
 				
-				Automaton AFDCM = new Automaton(AFDC);
+				
+				Automaton AFDCM = null;
+				if (AFDCstd != null)
+					AFDCM = new Automaton(AFDCstd);
+				else
+					AFDCM = new Automaton(AFDC);
 				System.out.println("\n\n--------------------------\n"
-						+ "AUTOMATE PRE-MINIMALISATION");
-				AFDCM.display();
-				System.out.println("\nAUTOMATE MINIMAL");
+						+ "AUTOMATE MINIMAL");
 				HashMap<Integer, ArrayList<Integer>> links = AFDCM.minimization();
 				AFDCM.display();
 				AFDCM.displayDeterministOrMinimalistLinks(links);
-				
 				
 				Automaton AFcomp = new Automaton(AFDCM);
 				System.out.println("\n\n--------------------------\n"
 						+ "AUTOMATE COMPLEMENTAIRE");
 				AFcomp.complementaryAutomaton();
 				AFcomp.display();
-				
 				
 				
 				String[] words = readWords(sc);
@@ -100,19 +182,7 @@ public class Launcher {
 				} else {
 					System.out.println("Aucun mot n'a été entré...");
 				}
-				
-				
-				
-				if (AF.isStandard())
-					System.out.println("\n\n--------------------------\n"
-							+ "AUTOMATE DEJA STANDARD");
-				else {
-					Automaton AFstd = new Automaton(AF);
-					System.out.println("\n\n--------------------------\n"
-							+ "AUTOMATE STANDARD");
-					AFstd.standardization();
-					AFstd.display();
-				}				
+							
 				
 				System.out.print("\n\nQue voulez-vous faire :\n"
 						+ "1) Choisir un autre automate\n"
@@ -260,7 +330,7 @@ public class Launcher {
 			System.out.print("\nListe des mots à reconnaître (séparés par un espace).\n"
 					+ "Le mot vide est noté \"*\".\n"
 					+ "Votre liste : ");
-			sc.nextLine(); // This line is used to empty the buffer
+			line = sc.nextLine();
 			line = sc.nextLine();
 		} while (line.equals(""));
 		words = line.split("\\s+");

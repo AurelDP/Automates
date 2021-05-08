@@ -147,8 +147,10 @@ public class Automaton {
 	}
     
 	public boolean isDeterminist() {	
-		if (nbrInitialStates > 1)
+		if (nbrInitialStates > 1) {
+			System.out.println("\nL'automate n'est pas déterministe car il a plus d'un état initial !");
 			return false;
+		}
 		else {
 			for (State s : states) {
 				for (String alpha : lettersInLang) {
@@ -156,8 +158,10 @@ public class Automaton {
 					for (Transition t : s.getTransiList()) {
 						if (t.getLetter().equals(alpha))
 							counter++;
-						if (counter == 2)
+						if (counter == 2) {
+							System.out.println("\nL'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !");
 							return false;
+						}
 					}
 				}	
 			}
@@ -176,8 +180,10 @@ public class Automaton {
 						if (t.getLetter().equals(alpha))
 							alphaUsed = true;
 					}
-					if (!alphaUsed)
+					if (!alphaUsed) {
+						System.out.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
 						return false;
+					}
 				}
 			}
 		}
@@ -198,14 +204,96 @@ public class Automaton {
 		return true;
 	}
     
-	public boolean isAsynchrone() {
+	public boolean isAsynchron() {
 		for (State s : states) {
 			for (Transition t : s.getTransiList()) {
-				if (t.getLetter().equals("*"))
+				if (t.getLetter().equals("*")) {
+					System.out.println("\nL'automate est asynchrone car une transition epsilon a été trouvée !\n\n");
 					return true;
+				}
 			}
 		}
 		return false;
+	}
+	
+	private void copyAndAddTransi(State current, State next) {
+		for (Transition t : next.getTransiList()) {
+			current.setTransi(t.getLetter(), t.getArrivalStateName());
+			current.incrementNbrTransi();
+		}
+	}
+	
+	public void updateFinalAndInitialNbr() {
+		nbrInitialStates = 0;
+		nbrFinalStates = 0;
+		for (State s : states) {
+			if (s.isFinal())
+				nbrFinalStates ++;
+			if (s.isInitial())
+				nbrInitialStates ++;
+		}
+	}
+	
+	public void removeUnlinkedStates() {
+		ArrayList<State> statesToRemove = new ArrayList<State>();
+		
+		for (State currentState : states) {
+			boolean unlinked = true;
+			for (State other : states) {
+            	if (currentState.getName() != other.getName()) {
+            		for (Transition t : other.getTransiList()) {
+            			if (t.getArrivalStateName() == currentState.getName()) {
+            				unlinked = false;
+            				break;
+            			}
+            		}
+            	}
+            	if (!unlinked)
+            		break;
+            }
+			if (unlinked)
+				statesToRemove.add(currentState);
+		}
+		
+		for (State s : statesToRemove) {
+			if (!s.isInitial()) {
+				states.remove(s);
+				nbrStates --;
+			}
+		}
+	}
+	
+	public void supAsynchron() {
+        for (State S : states) {
+            for (State X : states) {
+            	if (S.getName() != X.getName()) {
+            		ArrayList<Transition> transitionsToRemove = new ArrayList<Transition>();
+            		boolean copy = false;
+            		
+	            	for (Transition t : S.getTransiList()) {
+	                    if ((t.getArrivalStateName() == X.getName()) && t.getLetter().equals("*")) {
+	                    	if (X.isFinal())
+	    	            		S.setFinal(true);
+	    	            	if (X.isInitial())
+	    	            		S.setInitial(true);
+	                    	transitionsToRemove.add(t);
+	                    	copy = true;
+	                    }
+	                }
+	            	
+	            	if (copy)
+	            		copyAndAddTransi(S, X);
+	            	
+	            	for (Transition t : transitionsToRemove) {
+	            		S.getTransiList().remove(t);
+	            		S.decrementNbrTransi();
+	            	}
+
+            	}
+            }
+        }
+        removeUnlinkedStates();
+        updateFinalAndInitialNbr();
 	}
 	
 	public void complementaryAutomaton() {
@@ -237,14 +325,12 @@ public class Automaton {
 						nbrTransitions ++;
 					}
 					S.setInitial(false);
-					nbrInitialStates --;
 				}
 			}
-			if (sFinal)
-				nbrFinalStates ++;
 			states.add(new State(nbrStates, sFinal, true, nbrLettersInLang, listTrans));
 			nbrInitialStates ++;
 			nbrStates ++;
+			updateFinalAndInitialNbr();
 		} else
 			System.out.println("L'automate est déjà standard !");
 	}
@@ -276,9 +362,7 @@ public class Automaton {
 		HashMap<Integer, ArrayList<Integer>> links = new HashMap<Integer, ArrayList<Integer>>();
 		ArrayList<State> statesToDo = new ArrayList<State>();
 		
-		// We reset numbers of initialStates, finalStates and transitions
-		nbrInitialStates = 0;
-		nbrFinalStates = 0;
+		// We reset numbers of transitions
 		nbrTransitions = 0;
 		
 		ArrayList<State> stateCollection = new ArrayList<State>();
@@ -297,7 +381,6 @@ public class Automaton {
 		links.put(states.get(nbrStates-1).getName(), nameListFromStateList(stateCollection));
 		// We add the new state in statesToDo list
 		statesToDo.add(states.get(nbrStates-1));
-		nbrInitialStates ++;
 		
 		// While there are states in statesToDo list, we recover the first state of the list
 		while (statesToDo.size() != 0) {
@@ -355,12 +438,13 @@ public class Automaton {
 			for (State s : associatedStates.get(mergedState)) {
 				if (s.isFinal() && !mergedState.isFinal()) {
 					mergedState.setFinal(true);
-					nbrFinalStates ++;
 				}
 				// Then, we remove all value states in the automaton to only keep key states
 				this.removeStateFromName(s.getName());
 			}
 		}
+		
+		updateFinalAndInitialNbr();
 		
 		return links;
 	}
@@ -436,9 +520,7 @@ public class Automaton {
 		
 		ArrayList<ArrayList<State>> parts = new ArrayList<ArrayList<State>>();
 		
-		// We reset numbers of initialStates, finalStates and transitions
-		nbrInitialStates = 0;
-		nbrFinalStates = 0;
+		// We reset numbers of transitions
 		nbrTransitions = 0;
 		
 		int increment = 1;
@@ -524,7 +606,6 @@ public class Automaton {
 			for (State s : statesList) {
 				if (s.isFinal()) {
 					isFinal = true;
-					nbrFinalStates ++;
 					break;
 				}
 			}
@@ -532,7 +613,6 @@ public class Automaton {
 			for (State s : statesList) {
 				if (s.isInitial()) {
 					isInitial = true;
-					nbrInitialStates ++;
 					break;
 				}
 			}
@@ -579,6 +659,8 @@ public class Automaton {
 				removeStateFromName(s.getName());
 			}
 		}
+		
+		updateFinalAndInitialNbr();
 				
 		return linkedStates;
 	}
