@@ -72,4 +72,6 @@ Le mot vide est noté "*".
 Votre liste : Mots entrés :
 a : Non reconnu
 aa : Reconnu
-aa* : Reconnu
+a* : Non reconnu
+Mot vide : Reconnu
+*a : Non reconnu

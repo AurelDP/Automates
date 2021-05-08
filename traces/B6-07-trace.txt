@@ -1,4 +1,4 @@
-Automate choisi : B6-02.txt
+Automate choisi : B6-07.txt
 
 
 
@@ -7,11 +7,12 @@ AUTOMATE DE BASE
 
 Affichage de l'automate :
 
-Etat initial : [0]
+Etat initial : [1]
 Etat final : [0]
 Table de transitions :
           a   
-   0      0   
+   0      -   
+   1      1,0   
 
 
 --------------------------
@@ -21,18 +22,9 @@ Voulez-vous standardiser l'automate avant de déterminiser ?
 
 
 Votre choix (entrez le numéro du choix) : 
+L'automate n'est pas déterministe car un état contient deux états d'arrivée pour une même lettre !
 
---------------------------
-AUTOMATE STANDARD
-
-Affichage de l'automate :
-
-Etat initial : [1]
-Etats finaux : [0,1]
-Table de transitions :
-          a   
-   0      0   
-   1      0   
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
 
 
 --------------------------------------
@@ -40,31 +32,39 @@ AUTOMATE DETERMINISTE COMPLET
 
 Affichage de l'automate :
 
-Etat initial : [1]
-Etats finaux : [0,1]
+Etat initial : [3]
+Etats finaux : [4,5]
 Table de transitions :
           a   
-   0      0   
-   1      0   
+   3      4   
+   4      5   
+   5      5   
+
+Correspondance des états (après et avant traitement) :
+3 = [1]
+4 = [0, 1]
+5 = [0, 1, 2]
 
 
 --------------------------
 AUTOMATE MINIMAL
 
 Détail des partitions :
-1) [0, 1] [] 
-2) [1, 0] 
+1) [4, 5] [3] 
+2) [5, 4] [3] 
 
 Affichage de l'automate :
 
-Etat initial : [2]
-Etat final : [2]
+Etat initial : [7]
+Etat final : [6]
 Table de transitions :
           a   
-   2      2   
+   6      6   
+   7      6   
 
 Correspondance des états (après et avant traitement) :
-2 = [1, 0]
+6 = [5, 4]
+7 = [3]
 
 
 --------------------------
@@ -72,15 +72,18 @@ AUTOMATE COMPLEMENTAIRE
 
 Affichage de l'automate :
 
-Etat initial : [2]
+Etat initial : [7]
+Etat final : [7]
 Table de transitions :
           a   
-   2      2   
+   6      6   
+   7      6   
 
 Liste des mots à reconnaître (séparés par un espace).
 Le mot vide est noté "*".
 Votre liste : Mots entrés :
-aa : Non reconnu
 a : Non reconnu
+aaa : Non reconnu
+Mot vide : Reconnu
+*a : Non reconnu
 a* : Non reconnu
-Mot vide : Non reconnu

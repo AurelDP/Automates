@@ -17,24 +17,16 @@ public class Transition {
 	 * Getters
 	 ----------------------------------------------------------------------------*/
 	
-	public String getLetter() {
-		return letter;
-	}
+	public String getLetter() { return letter; }
 		
-	public int getArrivalStateName() {
-		return nameArrivalState;
-	}
+	public int getArrivalStateName() { return nameArrivalState; }
 	
 	/*-----------------------------------------------------------------------------
 	 * Setters
 	 ----------------------------------------------------------------------------*/
 	
-	public void setLetter(String s) {
-		this.letter = s;
-	}
+	public void setLetter(String s) { this.letter = s; }
 	
-	public void setArrivalStateName(int stateName) {
-		this.nameArrivalState = stateName;
-	}
+	public void setArrivalStateName(int stateName) { this.nameArrivalState = stateName; }
 	
 }

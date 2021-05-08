@@ -1,0 +1,142 @@
+Automate choisi : B6-21.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [1]
+Table de transitions :
+          a      b      c      d   
+   0      -      -      -      1   
+   1      2      -      -      -   
+   2      -      3      -      -   
+   3      -      -      0      -   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [4]
+Etats finaux : [1,4]
+Table de transitions :
+          a      b      c      d   
+   0      -      -      -      1   
+   1      2      -      -      -   
+   2      -      3      -      -   
+   3      -      -      0      -   
+   4      2      -      -      -   
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [1]
+Etat final : [1]
+Table de transitions :
+          a      b      c      d   
+   0      4      4      4      1   
+   1      2      4      4      4   
+   2      4      3      4      4   
+   3      4      4      0      4   
+   4      4      4      4      4   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de minimiser ?
+1) Oui
+2) Non, continuer vers la minimisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [5]
+Etats finaux : [1,5]
+Table de transitions :
+          a      b      c      d   
+   0      4      4      4      1   
+   1      2      4      4      4   
+   2      4      3      4      4   
+   3      4      4      0      4   
+   4      4      4      4      4   
+   5      2      4      4      4   
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [1, 5] [0, 2, 3, 4] 
+2) [1, 5] [2, 3, 4] [0] 
+3) [1, 5] [3] [2, 4] [0] 
+4) [1, 5] [3] [2] [4] [0] 
+
+Affichage de l'automate :
+
+Etat initial : [6]
+Etat final : [6]
+Table de transitions :
+          a      b      c      d   
+   6      8      9      9      9   
+   7      9      9      10      9   
+   8      9      7      9      9   
+   9      9      9      9      9   
+   10      9      9      9      6   
+
+Correspondance des états (après et avant traitement) :
+6 = [1, 5]
+7 = [3]
+8 = [2]
+9 = [4]
+10 = [0]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [6]
+Etats finaux : [7,8,9,10]
+Table de transitions :
+          a      b      c      d   
+   6      8      9      9      9   
+   7      9      9      10      9   
+   8      9      7      9      9   
+   9      9      9      9      9   
+   10      9      9      9      6   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Reconnu
+b : Reconnu
+c : Reconnu
+d : Reconnu
+ab : Reconnu
+bc : Reconnu
+cd : Reconnu
+da : Reconnu
+Mot vide : Non reconnu

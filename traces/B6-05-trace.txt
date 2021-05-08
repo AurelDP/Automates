@@ -1,0 +1,113 @@
+Automate choisi : B6-05.txt
+
+
+
+--------------------------
+AUTOMATE DE BASE
+
+Affichage de l'automate :
+
+Etats initiaux : [1,3]
+Etats finaux : [2,4]
+Table de transitions :
+          a      b   
+   0      0      0   
+   1      2      0   
+   2      -      -   
+   3      0      4   
+   4      -      -   
+
+
+--------------------------
+Voulez-vous standardiser l'automate avant de déterminiser ?
+1) Oui
+2) Non, continuer vers la déterminisation
+
+
+Votre choix (entrez le numéro du choix) : 
+
+--------------------------
+AUTOMATE STANDARD
+
+Affichage de l'automate :
+
+Etat initial : [5]
+Etats finaux : [2,4]
+Table de transitions :
+          a      b   
+   0      0      0   
+   1      2      0   
+   2      -      -   
+   3      0      4   
+   4      -      -   
+   5      2,0      0,4   
+
+L'automate n'est pas déterministe car il a plus d'un état initial !
+
+L'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !
+
+
+--------------------------------------
+AUTOMATE DETERMINISTE COMPLET
+
+Affichage de l'automate :
+
+Etat initial : [6]
+Etats finaux : [7,8]
+Table de transitions :
+          a      b   
+   6      7      8   
+   7      9      9   
+   8      9      9   
+   9      9      9   
+
+Correspondance des états (après et avant traitement) :
+6 = [1, 3]
+7 = [0, 2]
+8 = [0, 4]
+9 = [0, 5]
+
+
+--------------------------
+AUTOMATE MINIMAL
+
+Détail des partitions :
+1) [7, 8] [6, 9] 
+2) [8, 7] [9] [6] 
+
+Affichage de l'automate :
+
+Etat initial : [12]
+Etat final : [10]
+Table de transitions :
+          a      b   
+   10      11      11   
+   11      11      11   
+   12      10      10   
+
+Correspondance des états (après et avant traitement) :
+10 = [8, 7]
+11 = [9]
+12 = [6]
+
+
+--------------------------
+AUTOMATE COMPLEMENTAIRE
+
+Affichage de l'automate :
+
+Etat initial : [12]
+Etats finaux : [11,12]
+Table de transitions :
+          a      b   
+   10      11      11   
+   11      11      11   
+   12      10      10   
+
+Liste des mots à reconnaître (séparés par un espace).
+Le mot vide est noté "*".
+Votre liste : Mots entrés :
+a : Non reconnu
+er : Non reconnu
+Mot vide : Reconnu
+Mot vide : Reconnu
