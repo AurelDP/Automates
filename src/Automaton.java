@@ -50,6 +50,20 @@ public class Automaton {
 	 ----------------------------------------------------------------------------*/
 	
 	public void display() {
+		// If the automaton is asynchronous, we copy lettersInLang and we add in the copy "*"
+		// in order to display "*" in the table
+		ArrayList<String> copyLettersInLang = new ArrayList<String>(lettersInLang);
+		for (State s : states) {
+			for (Transition t : s.getTransiList()) {
+				if (t.getLetter().equals("*")) {
+					copyLettersInLang.add("*");
+					break;
+				}
+			}
+			if (copyLettersInLang.contains("*"))
+				break;
+		}
+		
 		Launcher.println("\nAffichage de l'automate :\n");
 		
 		if (nbrInitialStates == 1) {
@@ -97,14 +111,14 @@ public class Automaton {
 		
 		if (nbrTransitions >= 1) {
 			Launcher.print("Table de transitions :\n       ");
-			for (String car : lettersInLang) {
+			for (String car : copyLettersInLang) {
 				Launcher.print("   " + car + "   ");
 			}
 			Launcher.print("\n");
 			for (State s : states) {
 				Launcher.print("   " + s.getName() + "   ");
 				// After the name of each state, we go through the letters of the alphabet
-				for (String car : lettersInLang) {
+				for (String car : copyLettersInLang) {
 					Launcher.print("   ");
 					String arrivalState = "-";
 					int i = 0;
@@ -133,6 +147,7 @@ public class Automaton {
 	
 	public void displayDeterministOrMinimalistLinks(HashMap<Integer, ArrayList<Integer>> links) {
 		Launcher.println("\nCorrespondance des états (après et avant traitement) :");
+		// We simply loop through the HashMap to display new state linked with old states
 		for (Integer i : links.keySet()) {
 			Launcher.println(i + " = " + links.get(i));
 		}
@@ -142,11 +157,9 @@ public class Automaton {
 	 * Getters
 	 ----------------------------------------------------------------------------*/
 	
-	public ArrayList<State> getStates() {
-		return states;
-		
-	}
+	public ArrayList<State> getStates() { return states; }
 	
+	// This method return the state associate at the name given in entry 
 	public State getStateFromName(int name) {
 		for (State s : states) {
 			if (s.getName() == name)
@@ -159,12 +172,14 @@ public class Automaton {
 	 * Tests on automatons
 	 ----------------------------------------------------------------------------*/
     
-	public boolean isDeterminist() {	
+	public boolean isDeterminist() {
+		// If there is more than one initial state, the automaton is not determinist
 		if (nbrInitialStates > 1) {
 			Launcher.println("\nL'automate n'est pas déterministe car il a plus d'un état initial !");
 			return false;
-		}
-		else {
+		} else {
+			// Else, if for one state, there is more than one transition with the same letter
+			// the automaton is not determinist either
 			for (State s : states) {
 				for (String alpha : lettersInLang) {
 					int counter = 0;
@@ -183,20 +198,17 @@ public class Automaton {
 	}
     
 	public boolean isComplete() {
-		if (nbrTransitions == 0)
-			return true;
-		else {
-			for (State s : states) {
-				for (String alpha : lettersInLang) {
-					boolean alphaUsed = false;
-					for (Transition t : s.getTransiList()) {
-						if (t.getLetter().equals(alpha))
-							alphaUsed = true;
-					}
-					if (!alphaUsed) {
-						Launcher.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
-						return false;
-					}
+		// For each state, we check if all letters are used in transition. If there is a letter unused, then we return false
+		for (State s : states) {
+			for (String alpha : lettersInLang) {
+				boolean alphaUsed = false;
+				for (Transition t : s.getTransiList()) {
+					if (t.getLetter().equals(alpha))
+						alphaUsed = true;
+				}
+				if (!alphaUsed) {
+					Launcher.println("\nL'automate n'est pas complet car une lettre de l'alphabet n'a pas été utilisée dans l'une des transitions !");
+					return false;
 				}
 			}
 		}
@@ -204,9 +216,12 @@ public class Automaton {
 	}
 	
 	public boolean isStandard() {
+		// If there is more than one initial state, then the automaton is not standard
 		if (nbrInitialStates > 1)
 			return false;			
 		else {
+			// Else we simply check if there is a transition that point on the initial state
+			// If there is, we return false
 			for (State S : states) {
 				for (Transition T : S.getTransiList()) {
 					if (getStateFromName(T.getArrivalStateName()).isInitial())
@@ -217,7 +232,8 @@ public class Automaton {
 		return true;
 	}
     
-	public boolean isAsynchron() {
+	public boolean isAsynchronous() {
+		// If we find transition with letter "*", then the automaton is asynchronous
 		for (State s : states) {
 			for (Transition t : s.getTransiList()) {
 				if (t.getLetter().equals("*")) {
@@ -234,6 +250,7 @@ public class Automaton {
 	 ----------------------------------------------------------------------------*/
 	
 	private void copyAndAddTransi(State current, State next) {
+		// This method is used to copy all transitions of nextState and add them in currentStante transitions list
 		for (Transition t : next.getTransiList()) {
 			current.setTransi(t.getLetter(), t.getArrivalStateName());
 			current.incrementNbrTransi();
@@ -241,6 +258,7 @@ public class Automaton {
 	}
 	
 	public void updateFinalAndInitialNbr() {
+		// This method is called when the number of final and initial states must be updated 
 		nbrInitialStates = 0;
 		nbrFinalStates = 0;
 		for (State s : states) {
@@ -255,9 +273,13 @@ public class Automaton {
 	 * Methods used by asynchronous system
 	 ----------------------------------------------------------------------------*/
 	
-	public void removeUnlinkedStates() {
+	// This method is used in supAsynchronous to delete all states that are not pointed
+	// by any transition (there is no way to go in this state from the initial state)
+	private void removeUnlinkedStates() {
 		ArrayList<State> statesToRemove = new ArrayList<State>();
 		
+		// We check, for a currentState, if there is an other state that is pointed to this currentState
+		// If there is no state pointed on it, we add currentState to the list statesToRemove
 		for (State currentState : states) {
 			boolean unlinked = true;
 			for (State other : states) {
@@ -276,6 +298,8 @@ public class Automaton {
 				statesToRemove.add(currentState);
 		}
 		
+		// Then, for each state in statesToRemove, if the state is not initial (because initial state can be pointed by 0 states
+		// but is still accessible), we remove it
 		for (State s : statesToRemove) {
 			if (!s.isInitial()) {
 				states.remove(s);
@@ -284,30 +308,35 @@ public class Automaton {
 		}
 	}
 	
-	public void supAsynchron() {
-        for (State S : states) {
-            for (State X : states) {
-            	if (S.getName() != X.getName()) {
+	public void supAsynchronous() {
+		// For each state of the automaton
+        for (State currentState : states) {
+        	// We look all others states
+            for (State other : states) {
+            	if (currentState.getName() != other.getName()) {
             		ArrayList<Transition> transitionsToRemove = new ArrayList<Transition>();
             		boolean copy = false;
             		
-	            	for (Transition t : S.getTransiList()) {
-	                    if ((t.getArrivalStateName() == X.getName()) && t.getLetter().equals("*")) {
-	                    	if (X.isFinal())
-	    	            		S.setFinal(true);
-	    	            	if (X.isInitial())
-	    	            		S.setInitial(true);
+            		// For all other state, if there is a transition epsilon from currentState to other, we break it
+            		// and we copy all transitions of other and we add them in currentState
+            		// If other was final or initial, currentState will be final or initial too
+	            	for (Transition t : currentState.getTransiList()) {
+	                    if ((t.getArrivalStateName() == other.getName()) && t.getLetter().equals("*")) {
+	                    	if (other.isFinal())
+	                    		currentState.setFinal(true);
+	    	            	if (other.isInitial())
+	    	            		currentState.setInitial(true);
 	                    	transitionsToRemove.add(t);
 	                    	copy = true;
 	                    }
 	                }
 	            	
 	            	if (copy)
-	            		copyAndAddTransi(S, X);
+	            		copyAndAddTransi(currentState, other);
 	            	
 	            	for (Transition t : transitionsToRemove) {
-	            		S.getTransiList().remove(t);
-	            		S.decrementNbrTransi();
+	            		currentState.getTransiList().remove(t);
+	            		currentState.decrementNbrTransi();
 	            	}
 
             	}
@@ -399,21 +428,21 @@ public class Automaton {
 		nbrTransitions = 0;
 		
 		ArrayList<State> stateCollection = new ArrayList<State>();
-		states.add(new State(nbrStates, false, true, 0, new ArrayList<Transition>()));
+		states.add(new State(getMaxStateName()+1, false, true, 0, new ArrayList<Transition>()));
 		nbrStates ++;
 		
 		// We check all initialStates and add them in stateCollection
 		for (State s : states) {
-			if (s.isInitial() && !s.equals(states.get(nbrStates-1)))
+			if (s.isInitial() && !s.equals(states.get(states.size()-1)))
 				stateCollection.add(s);
 		}
 		// We sort stateCollection by state name
 		stateCollection.sort(Comparator.comparing(State::getName));
 		// We put new state as key and stateCollection as value in associatedStates
-		associatedStates.put(states.get(nbrStates-1), stateCollection);
-		links.put(states.get(nbrStates-1).getName(), nameListFromStateList(stateCollection));
+		associatedStates.put(states.get(states.size()-1), stateCollection);
+		links.put(states.get(states.size()-1).getName(), nameListFromStateList(stateCollection));
 		// We add the new state in statesToDo list
-		statesToDo.add(states.get(nbrStates-1));
+		statesToDo.add(states.get(states.size()-1));
 		
 		// While there are states in statesToDo list, we recover the first state of the list
 		while (statesToDo.size() != 0) {
@@ -448,15 +477,15 @@ public class Automaton {
 				// If there is something in stateCollection, we create a new state that is the merge of states in stateCollection
 				if (stateCollection.size() > 0) {
 					if (!isAlreadyIn) {
-						states.add(new State(nbrStates, false, false, 0, new ArrayList<Transition>()));
+						states.add(new State(getMaxStateName()+1, false, false, 0, new ArrayList<Transition>()));
 						nbrStates ++;
-						associatedStates.put(states.get(nbrStates-1), stateCollection);
-						links.put(states.get(nbrStates-1).getName(), nameListFromStateList(stateCollection));
+						associatedStates.put(states.get(states.size()-1), stateCollection);
+						links.put(states.get(states.size()-1).getName(), nameListFromStateList(stateCollection));
 						// We also add this new merged state in statesToDo
-						statesToDo.add(states.get(nbrStates-1));
+						statesToDo.add(states.get(states.size()-1));
 					}
 					// We create the new transition of mergedState with letter alpha to new state created
-					currentMergedState.getTransiList().add(new Transition(alpha, states.get(nbrStates-1).getName()));
+					currentMergedState.getTransiList().add(new Transition(alpha, states.get(states.size()-1).getName()));
 					currentMergedState.incrementNbrTransi();
 					nbrTransitions ++;
 				}
@@ -488,8 +517,8 @@ public class Automaton {
     
 	public void completion() {
 		nbrStates ++;
-		states.add(new State(nbrStates-1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
-		State sTrash = states.get(nbrStates-1);
+		states.add(new State(getMaxStateName()+1, false , false, nbrLettersInLang, new ArrayList<Transition>() ) );
+		State sTrash = states.get(states.size()-1);
 		for (int i = 0 ; i<nbrLettersInLang ; i++ ) {
 			sTrash.getTransiList().add(new Transition(lettersInLang.get(i), sTrash.getName()));
 		}
@@ -634,6 +663,15 @@ public class Automaton {
 			}
 			
 			increment ++;
+			
+			// We sort lists in parts and partsBis by state name in order to compare them
+			for (ArrayList<State> list : parts) {
+				list.sort(Comparator.comparing(State::getName));
+			}
+			for (ArrayList<State> list : partsBis) {
+				list.sort(Comparator.comparing(State::getName));
+			}
+			
 			
 		} while (!parts.equals(partsBis));
 		

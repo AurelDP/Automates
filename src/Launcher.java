@@ -54,9 +54,9 @@ public class Launcher {
 					e.printStackTrace();
 				}
 				
-				// System.out.print and System.out.println are replaced by print and println
+				// System.out.print and System.out.println are replaced (in the entire project) by print and println
 				// which are static public methods, to allow us to print in the console and in the file
-				// in the same time
+				// in the same time (which is impossible by default with System.out)
 				println("Automate choisi : " + namesTxtFiles.get(entry - 1) + "\n");
 				
 				// We recover the chosen automaton and we write it in the program memory
@@ -87,11 +87,11 @@ public class Launcher {
 
 				
 				Automaton AFDC = null;
-				if (AF.isAsynchron()) {
+				if (AF.isAsynchronous()) {
 					HashMap<Integer, ArrayList<Integer>> links = null;
 					
 					AFDC = new Automaton(AF);
-					AFDC.supAsynchron();
+					AFDC.supAsynchronous();
 					
 					if (AFDC.isDeterminist()) {
 						if (!AFDC.isComplete()) {
@@ -99,7 +99,17 @@ public class Launcher {
 						}
 					} else {
 						if (!AFDC.isComplete()) {
+							
 							AFDC.completion();
+							
+							
+							println("\n\n##########################################\n"
+									+ "COMPLET");
+							AFDC.display();
+							
+							
+							
+							
 							links = AFDC.determinization();
 						}
 					}
@@ -121,11 +131,11 @@ public class Launcher {
 							AFDC.completion();
 						}
 					} else {
+						AFDC = new Automaton(AF);
 						if (!AF.isComplete()) {
-							AFDC = new Automaton(AF);
 							AFDC.completion();
-							links = AFDC.determinization();
 						}
+						links = AFDC.determinization();
 					}
 					println("\n\n--------------------------------------\n"
 							+ "AUTOMATE DETERMINISTE COMPLET");
@@ -367,7 +377,7 @@ public class Launcher {
 			print("\nListe des mots à reconnaître (séparés par un espace).\n"
 					+ "Le mot vide est noté \"*\".\n"
 					+ "Votre liste : ");
-			line = sc.nextLine();
+			line = sc.nextLine(); // Buffer to clear the old input
 			line = sc.nextLine();
 		} while (line.equals(""));
 		words = line.split("\\s+");
