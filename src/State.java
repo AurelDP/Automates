@@ -62,6 +62,10 @@ public class State {
 		this.nbrTransitions ++;
 	}
 	
+	public void decrementNbrTransi() {
+		this.nbrTransitions --;
+	}
+	
 	public void setTransi(String letter, int arrivalStateName) {
 		transitions.add(new Transition(letter, arrivalStateName));
 	}
